@@ -1,9 +1,11 @@
 <!--Created by hjx on 2018/6/21.-->
 <template>
     <div class="wrapper-box">
-      <swiper-slide v-for="banner in banners">
-        <img class="banner-bg" :src="banner">
-      </swiper-slide>
+      <swiper :options="swiperOptions" ref="mySwiper">
+        <swiper-slide v-for="banner in banners">
+          <img class="banner-bg" :src="banner">
+        </swiper-slide>
+      </swiper>
     </div>
 </template>
 
@@ -17,7 +19,10 @@ export default {
       banners: ['http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-1.jpg',
         'http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-2.jpg',
         'http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-3.jpg',
-        'http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-4.jpg']
+        'http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-4.jpg'],
+      swiperOptions: {
+        autoplay: true
+      }
     }
   },
   components: {
