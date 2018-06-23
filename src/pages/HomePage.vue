@@ -7,14 +7,49 @@
         </swiper-slide>
       </swiper>
       <div class="swiper-pagination"></div>
+      <div class="head-content">
+        <div class="content-box">
+          <img src="../assets/tingche.png">
+          <div>停车</div>
+        </div>
+        <div class="content-box">
+          <img src="../assets/weizhangdaijiao.png">
+          <div>违章代缴</div>
+        </div>
+        <div class="content-box">
+          <img src="../assets/huodong.png">
+          <div>活动</div>
+        </div>
+      </div>
+      <div class="main-content">
+        <div class="content-title">热卖商品</div>
+        <div class="goods">
+          <div class="goods-type">
+            <img>
+            <div>焕然-新套餐</div>
+            <div>
+              <div></div>
+              <div>购买</div>
+            </div>
+          </div>
+        </div>
+          <div class="goods-type">
+            <img>
+            <div>深度养护套餐</div>
+            <div>
+              <div></div>
+              <div>购买</div>
+            </div>
+          </div>
+      </div>
       <div class="menu-box">
         <router-link tag="a"  to="/HomePage" class="img-box" active-class="selected">
           <div class="home-page"></div>
-          <span>首页</span>
-        </router-link>
-        <router-link  tag="a" to="/Gas" class="img-box" active-class="selected">
-          <div class="gas-page"></div>
-          <span>加油</span>
+      <span>首页</span>
+      </router-link>
+      <router-link  tag="a" to="/Gas" class="img-box" active-class="selected">
+        <div class="gas-page"></div>
+        <span>加油</span>
         </router-link>
         <router-link  tag="a" to="/CarService" class="img-box" active-class="selected">
           <div class="car-page"></div>
@@ -84,6 +119,22 @@ export default {
     right:0;
     top:2.5rem;
   }
+  .head-content{
+    height:1.5rem;
+    display:flex;
+    justify-content:space-around;
+  }
+  .content-box{
+    height:1.5rem;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+  }
+  .content-box img{
+    width:1rem;
+    margin-bottom:0.2rem;
+  }
   .menu-box{
     background-color: #dfdfdf;
     height: 1rem;
@@ -97,13 +148,17 @@ export default {
     display:flex;
     flex-direction:column;
     justify-content:center;
-    font-size:0.3rem;
+    align-items: center;
+    font-size:0.28rem;
     text-decoration: none;
   }
   .img-box>div{
-    width:0.6rem;
-    height:0.6rem;
-    background-size:0.6rem 0.6rem;
+    width:0.5rem;
+    height:0.5rem;
+    background-size:0.5rem 0.5rem;
+  }
+  .img-box span{
+    color:#8A8A8A;
   }
   .menu-box .img-box .home-page{
     background-image:url('../assets/menu/home.png');
@@ -119,6 +174,9 @@ export default {
   }
   .menu-box .img-box.selected .home-page{
     background-image:url("../assets/menu/home@selected.png");
+  }
+  .menu-box .img-box.selected span{
+    color:red;
   }
   .menu-box .img-box.selected .gas-page{
     background-image:url('../assets/menu/gas@selected.png');
