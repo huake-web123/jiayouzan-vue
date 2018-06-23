@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import './assets/js/flexiable'
+import './assets/js/flexible'
 export default {
   name: 'App'
 }

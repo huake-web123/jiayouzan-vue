@@ -1,9 +1,9 @@
 <!--Created by hjx on 2018/6/21.-->
 <template>
-    <div class="wrapper-box">
-      <swiper :options="swiperOptions" ref="mySwiper">
-        <swiper-slide v-bind:v-for="banner in banners">
-          <img class="banner-bg" :src="banner">
+    <div class="head-box">
+      <swiper :options="swiperOptions" ref="mySwiper" class="swiper-box">
+        <swiper-slide v-for="banner in banners" v-bind:key="banner.id">
+          <img class="banner-bg" :src="banner.imgUrl">
         </swiper-slide>
       </swiper>
       <div class="swiper-pagination"></div>
@@ -35,10 +35,7 @@ export default {
   name: '',
   data () {
     return {
-      banners: ['http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-1.jpg',
-        'http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-2.jpg',
-        'http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-3.jpg',
-        'http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-4.jpg'],
+      banners: [],
       swiperOptions: {
         autoplay: true,
         pagination: {
@@ -50,19 +47,58 @@ export default {
   components: {
     'swiper': swiper,
     'swiper-slide': swiperSlide
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.getSwiper()
+    })
+  },
+  methods: {
+    getSwiper () {
+      // this.banners
+      let that = this
+      this.$ajax({
+        method: 'get',
+        url: 'https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/banner'
+      }).then((res) => {
+        // res是变量
+        that.banners = res.data.data
+      })
+    }
   }
 }
 </script>
 
 <style scoped>
+  .head-box{
+    height:3rem;
+  }
+  .swiper-box{
+    height:3rem;
+  }
+  .swiper-box .banner-bg{
+    width:100%;
+    height:3rem;
+  }
+  .swiper-pagination{
+    right:0;
+    top:2.5rem;
+  }
   .menu-box{
     background-color: #dfdfdf;
-    height: 3.125rem;
+    height: 1rem;
     display:flex;
     justify-content:space-around;
     position: fixed;
     bottom: 0;
     width: 100%;
+  }
+  .img-box{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    font-size:0.3rem;
+    text-decoration: none;
   }
   .img-box>div{
     width:0.6rem;
