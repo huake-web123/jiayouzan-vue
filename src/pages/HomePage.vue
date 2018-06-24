@@ -24,8 +24,8 @@
       <div class="main-content">
         <div class="content-title">热卖商品</div>
         <div class="goods">
-          <div class="goods-type">
-            <div class="img-box"><img></div>
+          <div class="goods-type" v-for="item in goodsArr" v-bind:key="item.id">
+            <div class="img-box"><img :src="item.imgUrl"></div>
             <div class="desc">焕然-新套餐</div>
             <div class="buy-box">
               <div class="price">价格</div>
@@ -64,6 +64,8 @@ export default {
   data () {
     return {
       banners: [],
+      goodsArr: [],
+      page: '1',
       swiperOptions: {
         autoplay: true,
         pagination: {
@@ -79,11 +81,23 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.getSwiper()
-      this.loadMore()
+      this.loadData()
     })
   },
   methods: {
     loadMore () {
+      this.page++
+      this.loadData()
+    },
+    loadData () {
+      this.$ajax({
+        method: 'get',
+        url: 'https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/goods/' + this.page + '/6'
+      }).then((res) => {
+        console.log(res)
+        this.goodsArr.push(...res.data.data)
+        // 往下面滚动
+      })
     },
     getSwiper () {
       // this.banners
@@ -133,8 +147,9 @@ export default {
     }
   }
   .main-content {
-    height: 6.7rem;
+    /*height: 6.7rem;*/
     margin-top: 0.2rem;
+    padding-bottom:1rem;
     .content-title {
       height: 0.8rem;
       background-color: white;
@@ -161,10 +176,14 @@ export default {
     }
     .goods{
       margin-top:0.05rem;
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
       .goods-type {
         width: 3.6rem;
         height: 5rem;
         background-color: white;
+        margin-top:0.25rem;
         /*display:flex;*/
         /*flex-direction:column;*/
         /*justify-content:space-around;*/
