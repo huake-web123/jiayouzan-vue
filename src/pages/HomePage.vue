@@ -33,14 +33,6 @@
             </div>
           </div>
         </div>
-          <div class="goods-type">
-            <img>
-            <div>深度养护套餐</div>
-            <div>
-              <div></div>
-              <div>购买</div>
-            </div>
-          </div>
       </div>
       <div class="menu-box">
         <router-link tag="a"  to="/HomePage" class="img-box" active-class="selected">
@@ -105,27 +97,28 @@ export default {
 </script>
 
 <style scoped>
-  .head-box{
-    height:3rem;
+ .head-box{
+    background-color:#F5F5F5;
   }
   .swiper-box{
-    height:3rem;
+    height:3.5rem;
   }
   .swiper-box .banner-bg{
     width:100%;
-    height:3rem;
+    height:3.5rem;
   }
   .swiper-pagination{
     right:0;
-    top:2.5rem;
+    top:3rem;
   }
   .head-content{
-    height:1.5rem;
+    height:2rem;
     display:flex;
     justify-content:space-around;
+    background-color:white;
   }
   .content-box{
-    height:1.5rem;
+    height:1.6rem;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -135,6 +128,21 @@ export default {
     width:1rem;
     margin-bottom:0.2rem;
   }
+  .main-content{
+    height:5rem;
+    margin-top:0.2rem;
+  }
+  .main-content .content-title{
+    height:0.8rem;
+    background-color:white;
+    text-align:center;
+    line-height:0.8rem;
+  }
+ .main-content .goods .goods-type{
+   width:3.5rem;
+   height:4.5rem;
+   background-color:white;
+ }
   .menu-box{
     background-color: #dfdfdf;
     height: 1rem;
