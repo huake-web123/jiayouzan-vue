@@ -25,14 +25,15 @@
         <div class="content-title">热卖商品</div>
         <div class="goods">
           <div class="goods-type">
-            <img>
-            <div>焕然-新套餐</div>
-            <div>
-              <div></div>
-              <div>购买</div>
+            <div class="img-box"><img></div>
+            <div class="desc">焕然-新套餐</div>
+            <div class="buy-box">
+              <div class="price">价格</div>
+              <div class="buy">购买</div>
             </div>
           </div>
         </div>
+        <div class="more" @click="loadMore">加载更多</div>
       </div>
       <div class="menu-box">
         <router-link tag="a"  to="/HomePage" class="img-box" active-class="selected">
@@ -78,9 +79,12 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.getSwiper()
+      this.loadMore()
     })
   },
   methods: {
+    loadMore () {
+    },
     getSwiper () {
       // this.banners
       let that = this
@@ -96,16 +100,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
  .head-box{
     background-color:#F5F5F5;
   }
   .swiper-box{
     height:3.5rem;
-  }
-  .swiper-box .banner-bg{
-    width:100%;
-    height:3.5rem;
+    .banner-bg{
+      width:100%;
+      height:3.5rem;
+    }
   }
   .swiper-pagination{
     right:0;
@@ -117,82 +121,138 @@ export default {
     justify-content:space-around;
     background-color:white;
   }
-  .content-box{
-    height:1.6rem;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
+  .content-box {
+    height: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 1rem;
+      margin-bottom: 0.2rem;
+    }
   }
-  .content-box img{
-    width:1rem;
-    margin-bottom:0.2rem;
+  .main-content {
+    height: 6.7rem;
+    margin-top: 0.2rem;
+    .content-title {
+      height: 0.8rem;
+      background-color: white;
+      text-align: center;
+      line-height: 0.8rem;
+      font-size:0.28rem;
+    }
+    /*css3::after伪类*/
+    .content-title:before{
+      content:"———";
+      margin-right:0.2rem;
+      color:#8A8A8A
+    }
+    .content-title:after{
+      content:"———";
+      margin-left:0.2rem;
+      color:#8A8A8A
+    }
+    .more{
+      text-align:center;
+      height:0.8rem;
+      line-height:0.8rem;
+      font-size:0.28rem;
+    }
+    .goods{
+      margin-top:0.05rem;
+      .goods-type {
+        width: 3.6rem;
+        height: 5rem;
+        background-color: white;
+        /*display:flex;*/
+        /*flex-direction:column;*/
+        /*justify-content:space-around;*/
+        /*align-items:center;*/
+        .img-box{
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          height:3.5rem;
+          img{
+            width:2rem;
+            height:2.5rem;
+          }
+        }
+        .desc{
+          margin-top:0.2rem;
+          font-size:0.28rem;
+          margin-left:0.25rem;
+        }
+        .buy-box{
+          display:flex;
+          justify-content:space-between;
+          color:red;
+          margin-left:0.2rem;
+          margin-right:0.2rem;
+          margin-top:0.25rem;
+          font-size:0.28rem;
+          .price{
+            padding:0.05rem;
+          }
+          .buy{
+            border:1px solid #F5F5F5;
+            padding:0.05rem;
+          }
+        }
+      }
+    }
   }
-  .main-content{
-    height:5rem;
-    margin-top:0.2rem;
-  }
-  .main-content .content-title{
-    height:0.8rem;
-    background-color:white;
-    text-align:center;
-    line-height:0.8rem;
-  }
- .main-content .goods .goods-type{
-   width:3.5rem;
-   height:4.5rem;
-   background-color:white;
- }
-  .menu-box{
+  .menu-box {
     background-color: #dfdfdf;
     height: 1rem;
-    display:flex;
-    justify-content:space-around;
+    display: flex;
+    justify-content: space-around;
     position: fixed;
     bottom: 0;
     width: 100%;
-  }
-  .img-box{
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items: center;
-    font-size:0.28rem;
-    text-decoration: none;
-  }
-  .img-box>div{
-    width:0.5rem;
-    height:0.5rem;
-    background-size:0.5rem 0.5rem;
-  }
-  .img-box span{
-    color:#8A8A8A;
-  }
-  .menu-box .img-box .home-page{
-    background-image:url('../assets/menu/home.png');
-  }
-  .menu-box .img-box .gas-page{
-    background-image:url('../assets/menu/gas.png');
-  }
-  .menu-box .img-box .car-page{
-    background-image:url('../assets/menu/car.png');
-  }
-  .menu-box .img-box .personal-page{
-    background-image:url('../assets/menu/my.png');
-  }
-  .menu-box .img-box.selected .home-page{
-    background-image:url("../assets/menu/home@selected.png");
-  }
-  .menu-box .img-box.selected span{
-    color:red;
-  }
-  .menu-box .img-box.selected .gas-page{
-    background-image:url('../assets/menu/gas@selected.png');
-  }
-  .menu-box .img-box.selected .car-page{
-    background-image:url('../assets/menu/car@selected.png');
-  }
-  .menu-box .img-box.selected .personal-page{
-    background-image:url('../assets/menu/my@selected.png');
+    .img-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.28rem;
+      text-decoration: none;
+      > div {
+        width: 0.5rem;
+        height: 0.5rem;
+        background-size: 0.5rem 0.5rem;
+      }
+      span {
+        color: #8A8A8A;
+      }
+      .home-page {
+        background-image: url('../assets/menu/home.png');
+      }
+      .gas-page {
+        background-image: url('../assets/menu/gas.png');
+      }
+      .car-page {
+        background-image: url('../assets/menu/car.png');
+      }
+      .personal-page {
+        background-image: url('../assets/menu/my.png');
+      }
+      &.selected .home-page {
+        background-image: url("../assets/menu/home@selected.png");
+      }
+      &.selected span {
+        color: red;
+      }
+      &.selected .gas-page {
+        background-image: url('../assets/menu/gas@selected.png');
+      }
+      &.selected .car-page {
+        background-image: url('../assets/menu/car@selected.png');
+      }
+      &.selected .personal-page {
+        background-image: url('../assets/menu/my@selected.png');
+      }
+    }
   }
 </style>
