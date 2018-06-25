@@ -1,6 +1,8 @@
 <!--Created by hjx on 2018/6/21.-->
 <template>
-    <div class="head-box">
+  <div class="whole-box">
+    <div class="loading" v-if="a==false||b==false">加载中......</div>
+    <div class="head-box" v-if="a==true&b==true">
       <swiper :options="swiperOptions" ref="mySwiper" class="swiper-box">
         <swiper-slide v-for="banner in banners" v-bind:key="banner.id">
           <img class="banner-bg" :src="banner.imgUrl">
@@ -26,14 +28,15 @@
         <div class="goods">
           <div class="goods-type" v-for="item in goodsArr" v-bind:key="item.id">
             <div class="img-box"><img :src="item.imgUrl"></div>
-            <div class="desc">焕然-新套餐</div>
+            <div class="desc">{{item.name}}</div>
             <div class="buy-box">
-              <div class="price">价格</div>
+              <div class="price">&yen;{{item.price}}</div>
               <div class="buy">购买</div>
             </div>
           </div>
         </div>
-        <div class="more" @click="loadMore">加载更多</div>
+        <div class="more" @click="loadMore" v-if="loadArr.length!=0">加载更多</div>
+        <div class="complete" v-if="loadArr.length==0">加载完毕</div>
       </div>
       <div class="menu-box">
         <router-link tag="a"  to="/HomePage" class="img-box" active-class="selected">
@@ -54,6 +57,7 @@
         </router-link>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -65,7 +69,10 @@ export default {
     return {
       banners: [],
       goodsArr: [],
+      loadArr: [],
       page: '1',
+      a: false,
+      b: false,
       swiperOptions: {
         autoplay: true,
         pagination: {
@@ -89,7 +96,11 @@ export default {
       this.page++
       this.loadData()
     },
+    //  function loadData(){
+    //       return axios.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/goods/' + this.page + '/6');
+    // },
     loadData () {
+      let that = this
       this.$ajax({
         method: 'get',
         url: 'https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/goods/' + this.page + '/6'
@@ -97,6 +108,8 @@ export default {
         console.log(res)
         this.goodsArr.push(...res.data.data)
         // 往下面滚动
+        that.a = true
+        that.loadArr = res.data.data
       })
     },
     getSwiper () {
@@ -108,6 +121,7 @@ export default {
       }).then((res) => {
         // res是变量
         that.banners = res.data.data
+        that.b = true
       })
     }
   }
@@ -115,6 +129,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  .loading{
+    position:absolute;
+    top:50%;
+    left:50%
+  }
  .head-box{
     background-color:#F5F5F5;
   }
@@ -174,6 +193,12 @@ export default {
       line-height:0.8rem;
       font-size:0.28rem;
     }
+    .complete{
+      text-align:center;
+      height:0.8rem;
+      line-height:0.8rem;
+      font-size:0.28rem;
+    }
     .goods{
       margin-top:0.05rem;
       display:flex;
@@ -192,7 +217,7 @@ export default {
           display:flex;
           justify-content:center;
           align-items:center;
-          height:3.5rem;
+          height:3.2rem;
           img{
             width:2rem;
             height:2.5rem;
@@ -202,6 +227,8 @@ export default {
           margin-top:0.2rem;
           font-size:0.28rem;
           margin-left:0.25rem;
+          height:0.75rem;
+          overflow:hidden;
         }
         .buy-box{
           display:flex;
