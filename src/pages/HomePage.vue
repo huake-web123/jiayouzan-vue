@@ -1,8 +1,8 @@
 <!--Created by hjx on 2018/6/21.-->
 <template>
   <div class="whole-box">
-    <div class="loading" v-if="a==false||b==false">加载中......</div>
-    <div class="head-box" v-if="a==true&b==true">
+    <div class="loading" v-if="isLoading">加载中......</div>
+    <div class="head-box" v-else>
       <swiper :options="swiperOptions" ref="mySwiper" class="swiper-box">
         <swiper-slide v-for="banner in banners" v-bind:key="banner.id">
           <img class="banner-bg" :src="banner.imgUrl">
@@ -35,8 +35,8 @@
             </div>
           </div>
         </div>
-        <div class="more" @click="loadMore" v-if="loadArr.length!=0">加载更多</div>
-        <div class="complete" v-if="loadArr.length==0">加载完毕</div>
+        <div class="more" @click="loadMore" v-if="!allLoaded">加载更多</div>
+        <div class="complete" v-else>加载完毕</div>
       </div>
       <div class="menu-box">
         <router-link tag="a"  to="/HomePage" class="img-box" active-class="selected">
@@ -71,8 +71,8 @@ export default {
       goodsArr: [],
       loadArr: [],
       page: '1',
-      a: false,
-      b: false,
+      isLoading: true,
+      allLoaded: false,
       swiperOptions: {
         autoplay: true,
         pagination: {
@@ -87,43 +87,66 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      this.getSwiper()
       this.loadData()
     })
   },
   methods: {
     loadMore () {
       this.page++
-      this.loadData()
+      this.loadMoreGoodsData()
     },
-    //  function loadData(){
-    //       return axios.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/goods/' + this.page + '/6');
-    // },
+    loadBannerData () {
+      return this.$ajax.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/banner')
+    },
+    loadGoodsData () {
+      return this.$ajax.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/goods/' + this.page + '/6')
+    },
     loadData () {
-      let that = this
-      this.$ajax({
-        method: 'get',
-        url: 'https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/goods/' + this.page + '/6'
-      }).then((res) => {
-        console.log(res)
-        this.goodsArr.push(...res.data.data)
-        // 往下面滚动
-        that.a = true
-        that.loadArr = res.data.data
-      })
+      this.$ajax.all([this.loadGoodsData(), this.loadBannerData()])
+        .then((res) => {
+          let goodsData = res[0]
+          let bannerData = res[1]
+          this.banners = bannerData.data.data
+          this.goodsArr = goodsData.data.data
+          this.isLoading = false
+        })
     },
-    getSwiper () {
-      // this.banners
-      let that = this
-      this.$ajax({
-        method: 'get',
-        url: 'https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/banner'
-      }).then((res) => {
-        // res是变量
-        that.banners = res.data.data
-        that.b = true
-      })
+    loadMoreGoodsData () {
+      this.$ajax.all([this.loadGoodsData()])
+        .then((res) => {
+          let goodsData = res[0]
+          if (goodsData.data.data.length === 0) {
+            this.allLoaded = true
+          } else {
+            this.goodsArr.push(...goodsData.data.data)
+          }
+        })
     }
+    // loadData () {
+    //   let that = this
+    //   this.$ajax({
+    //     method: 'get',
+    //     url: 'https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/goods/' + this.page + '/6'
+    //   }).then((res) => {
+    //     console.log(res)
+    //     this.goodsArr.push(...res.data.data)
+    //     // 往下面滚动
+    //     that.a = true
+    //     that.loadArr = res.data.data
+    //   })
+    // },
+    // getSwiper () {
+    //   // this.banners
+    //   let that = this
+    //   this.$ajax({
+    //     method: 'get',
+    //     url: 'https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/banner'
+    //   }).then((res) => {
+    //     // res是变量
+    //     that.banners = res.data.data
+    //     that.b = true
+    //   })
+    // }
   }
 }
 </script>
