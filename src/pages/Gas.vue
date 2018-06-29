@@ -12,7 +12,7 @@
       <div>
         <div class="station-name">{{nearbyStation.name}}</div>
           <!--nearbyStation是对象，直接调用，注意和数组的区别。v-for是用来循环的，如果只有一个对象就不能循环。-->
-          <div class="station-position">{{nearbyStation.location}}</div>
+          <div class="station-location">{{nearbyStation.location}}</div>
         </div>
         <div class="station-distance">{{nearbyStation.distance}}</div>
       </div>
@@ -26,19 +26,22 @@
         <div class="navigation">导航</div>
       </div>
     </div>
-    <div class="load-more" v-for="item in loadArr" v-bind:key="item.id">
-       <div>
+    <div class="more-station" v-if="loading">
+      <div class="load-more" v-for="item in loadArr" v-bind:key="item.id">
+        <div>
           <div class="station-name">{{item.name}}</div>
-          <div class="staion-location">{{item.location}}</div>
-       </div>
-       <div>
+          <div class="station-location">{{item.location}}</div>
+        </div>
+        <div>
           <div class="station-distance">{{item.distance}}</div>
           <div class="station-img"><img src="../assets/daohang.png"></div>
-       </div>
+        </div>
+      </div>
     </div>
     <div class="load-box" @click="loadMore">
-      <div class="drop-down">点击下拉获取更多加油站</div>
-      <div class="img-box"><img src="../assets/jiantou.png"></div>
+      <div class="drop-down" v-if="!allLoaded">点击下拉获取更多加油站</div>
+      <div class="complete" v-if="allLoaded">加载完毕</div>
+      <div class="img-box" v-if="!allLoaded"><img src="../assets/jiantou.png"></div>
     </div>
   </div>
 </template>
@@ -54,6 +57,8 @@ export default {
       loadArr: [],
       page: '1',
       stationArr: [],
+      allLoaded: false,
+      loading: false,
       nearbyStation: null,
       swiperOptions: {
         autoplay: true,
@@ -75,7 +80,7 @@ export default {
   methods: {
     loadMore () {
       this.page++
-      this.loadMoreStation()
+      this.loadMoreStationData()
     },
     loadBanner () {
       return this.$ajax.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/station_banner')
@@ -87,11 +92,21 @@ export default {
       return this.$ajax.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/stations/' + this.page + '/10')
     },
     loadData () {
-      this.$ajax.all([this.loadBanner(), this.loadNearbyStation(), this.loadMoreStation()])
+      this.$ajax.all([this.loadBanner(), this.loadNearbyStation()])
         .then((res) => {
           this.banners = res[0].data.data
           this.nearbyStation = res[1].data.data
-          this.loadArr = res[2].data.stationArr
+        })
+    },
+    loadMoreStationData () {
+      this.$ajax.all([this.loadMoreStation()])
+        .then((res) => {
+          this.loading = true
+          if (res[0].data.stationArr.length === 0) {
+            this.allLoaded = true
+          } else {
+            this.loadArr.push(...res[0].data.stationArr)
+          }
         })
     }
   }
@@ -102,12 +117,15 @@ export default {
   .wrapper-box {
     background-color: #F5F5F5;
     padding-bottom:4.8rem;
-    .img-box {
+    .swiper-box{
+      height:3rem;
+      .img-box {
       height: 3rem;
       img {
         height: 100%;
         width: 100%;
       }
+    }
     }
     .swiper-pagination {
       right: 0;
@@ -125,7 +143,7 @@ export default {
         color: #222222;
         font-size: 0.38rem;
       }
-      .station-position {
+      .station-location {
         color: #8A8A8A;
         margin-top: 0.1rem;
       }
@@ -149,9 +167,12 @@ export default {
         justify-content: center;
         align-items: center;
         img {
-          width: 0.72rem;
+          width: 0.64rem;
         }
       }
+    }
+    .more-station{
+      margin-top:0.25rem;
     }
     .load-more{
       height: 1.8rem;
@@ -161,11 +182,12 @@ export default {
       padding-left: 0.25rem;
       padding-right: 0.35rem;
       background-color: white;
+      margin-top: 0.025rem;
       .station-name {
         color: #222222;
         font-size: 0.38rem;
       }
-      .station-position {
+      .station-location {
         color: #8A8A8A;
         margin-top: 0.1rem;
       }
@@ -176,7 +198,7 @@ export default {
       }
       .station-img{
         img{
-          width:0.72rem;
+          width:0.54rem;
         }
       }
     }
@@ -184,6 +206,11 @@ export default {
       text-align: center;
       margin-top: 0.025rem;
       .drop-down {
+        background-color: white;
+        height: 1rem;
+        line-height: 1rem;
+      }
+      .complete{
         background-color: white;
         height: 1rem;
         line-height: 1rem;
