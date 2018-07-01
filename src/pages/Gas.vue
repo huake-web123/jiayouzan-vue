@@ -33,7 +33,7 @@
           <div class="station-location">{{item.location}}</div>
         </div>
         <div>
-          <div class="station-distance">{{item.distance}}</div>
+          <div class="station-distance">{{item.distance | distanceFilters}}km</div>
           <div class="station-img"><img src="../assets/daohang.png"></div>
         </div>
       </div>
@@ -71,6 +71,15 @@ export default {
   components: {
     'swiper': swiper,
     'swiper-slide': swiperSlide
+  },
+  filters: {
+    distanceFilters: function (value) {
+      let num = parseFloat(value.split('km')[0])
+      // split是js字符串转数组实现方法，parseFloat是js字符串转数字方法。
+      value = num.toFixed(2)
+      // toFixed是js保留两位小数方法
+      return value
+    }
   },
   mounted () {
     this.$nextTick(() => {
@@ -116,7 +125,7 @@ export default {
 <style  lang="less" scoped>
   .wrapper-box {
     background-color: #F5F5F5;
-    padding-bottom:4.8rem;
+    padding-bottom:3rem;
     .swiper-box{
       height:3rem;
       .img-box {
