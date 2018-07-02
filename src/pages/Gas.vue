@@ -8,7 +8,7 @@
     </swiper>
     <div class="swiper-pagination"></div>
       <!--v-if判断是否有值，有值为真-->
-    <div class="gas-station" v-if="nearbyStation">
+    <div class="gas-station" v-if="nearbyStation" @click="gasMessage(nearbyStation.id, nearbyStation.name)">
       <div>
         <div class="station-name">{{nearbyStation.name}}</div>
           <!--nearbyStation是对象，直接调用，注意和数组的区别。v-for是用来循环的，如果只有一个对象就不能循环。-->
@@ -27,7 +27,8 @@
       </div>
     </div>
     <div class="more-station" v-if="loading">
-      <div class="load-more" v-for="item in loadArr" v-bind:key="item.id">
+      <div class="load-more" v-for="item in loadArr" v-bind:key="item.id"
+           @click="gasMessage(item.id, item.name)">
         <div>
           <div class="station-name">{{item.name}}</div>
           <div class="station-location">{{item.location}}</div>
@@ -42,6 +43,16 @@
       <div class="drop-down" v-if="!allLoaded">点击下拉获取更多加油站</div>
       <div class="complete" v-if="allLoaded">加载完毕</div>
       <div class="img-box" v-if="!allLoaded"><img src="../assets/jiantou.png"></div>
+    </div>
+    <div class="modal-box">
+      <div class="message-box">
+      <div class="confirm-station">请向加油员确认当前加油站名称</div>
+      <div class="station-name"></div>
+      <div class="confirm-refueling">确定加油</div>
+      <div class="select-error">如因站点选择错误给你带来不便，</div>
+      <div class="disclaimer">加油站概不负责</div>
+      <!--快速复制当前行Ctrl+D-->
+    </div>
     </div>
   </div>
 </template>
@@ -117,6 +128,10 @@ export default {
             this.loadArr.push(...res[0].data.stationArr)
           }
         })
+    },
+    gasMessage (id, name) {
+      alert(id)
+      alert(name)
     }
   }
 }
@@ -126,6 +141,8 @@ export default {
   .wrapper-box {
     background-color: #F5F5F5;
     padding-bottom:3rem;
+    min-height: 100vh;
+    box-sizing: border-box;
     .swiper-box{
       height:3rem;
       .img-box {
@@ -232,6 +249,24 @@ export default {
         img{
           width:2rem;
         }
+      }
+    }
+    .modal-box {
+      position:absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background-color: rgba(0,0,0,.5);
+      z-index: 99;
+      .message-box {
+        width: 3rem;
+        height: 3rem;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        background-color: white;
       }
     }
   }
