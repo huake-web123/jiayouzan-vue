@@ -44,13 +44,14 @@
       <div class="complete" v-if="allLoaded">加载完毕</div>
       <div class="img-box" v-if="!allLoaded"><img src="../assets/jiantou.png"></div>
     </div>
-    <div class="modal-box">
+    <div class="modal-box" v-if="message">
       <div class="message-box">
-      <div class="confirm-station">请向加油员确认当前加油站名称</div>
-      <div class="station-name"></div>
-      <div class="confirm-refueling">确定加油</div>
-      <div class="select-error">如因站点选择错误给你带来不便，</div>
-      <div class="disclaimer">加油站概不负责</div>
+        <div class="img-box" @click="closeMessage">X</div>
+        <div class="confirm-station">请向加油员确认当前加油站名称</div>
+        <div class="station-name">{{stationName}}</div>
+        <div class="confirm-refueling">确定加油</div>
+        <div class="select-error">如因站点选择错误给你带来不便，</div>
+        <div class="disclaimer">加油站概不负责</div>
       <!--快速复制当前行Ctrl+D-->
     </div>
     </div>
@@ -66,6 +67,8 @@ export default {
     return {
       banners: [],
       loadArr: [],
+      stationName: '',
+      message: false,
       page: '1',
       stationArr: [],
       allLoaded: false,
@@ -130,8 +133,11 @@ export default {
         })
     },
     gasMessage (id, name) {
-      alert(id)
-      alert(name)
+      this.stationName = name;
+      this.message = true
+    },
+    closeMessage () {
+      this.message = false
     }
   }
 }
@@ -260,13 +266,44 @@ export default {
       background-color: rgba(0,0,0,.5);
       z-index: 99;
       .message-box {
-        width: 3rem;
-        height: 3rem;
+        width: 5.5rem;
+        height: 5rem;
         position: absolute;
         transform: translate(-50%, -50%);
         top: 50%;
         left: 50%;
         background-color: white;
+        font-size:0.3rem;
+        text-align: center;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        .img-box{
+          margin-left:4.6rem;
+          margin-top:0.2rem;
+        }
+        .confirm-station{
+          margin-top:0.3rem;
+        }
+        .station-name{
+          margin-top:0.3rem;
+          color:red;
+        }
+        .confirm-refueling{
+          margin-top:0.3rem;
+          width:4.5rem;
+          height:0.7rem;
+          line-height:0.7rem;
+          background-color: red;
+          color:white;
+        }
+        .select-error{
+          margin-top:0.2rem;
+        }
+        .disclaimer{
+          margin-top:0.2rem;
+          color:red;
+        }
       }
     }
   }
