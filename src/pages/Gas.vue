@@ -17,7 +17,7 @@
         <div class="station-distance">{{nearbyStation.distance}}</div>
       </div>
     <div class="midcontent">
-      <div class="pay-box">
+      <div class="pay-box" @click="gasMessage(nearbyStation.id, nearbyStation.name)">
         <div class="pay-img"><img src="../assets/zhifu.png"></div>
         <div class="pay">支付</div>
       </div>
@@ -49,7 +49,7 @@
         <div class="img-box" @click="closeMessage">X</div>
         <div class="confirm-station">请向加油员确认当前加油站名称</div>
         <div class="station-name">{{stationName}}</div>
-        <div class="confirm-refueling">确定加油</div>
+        <div class="confirm-refueling" @click="jiaYou">确定加油</div>
         <div class="select-error">如因站点选择错误给你带来不便，</div>
         <div class="disclaimer">加油站概不负责</div>
       <!--快速复制当前行Ctrl+D-->
@@ -68,6 +68,7 @@ export default {
       banners: [],
       loadArr: [],
       stationName: '',
+      stationId: '',
       message: false,
       page: '1',
       stationArr: [],
@@ -133,11 +134,15 @@ export default {
         })
     },
     gasMessage (id, name) {
-      this.stationName = name;
+      this.stationName = name
+      this.stationId = id
       this.message = true
     },
     closeMessage () {
       this.message = false
+    },
+    jiaYou () {
+      this.$router.push({path: '/jiayouliang/' + this.stationId})
     }
   }
 }
@@ -288,6 +293,7 @@ export default {
         .station-name{
           margin-top:0.3rem;
           color:red;
+          font-size:0.36rem;
         }
         .confirm-refueling{
           margin-top:0.3rem;

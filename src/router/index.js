@@ -4,6 +4,7 @@ import Home from '@/pages/HomePage'
 import Gas from '@/pages/Gas'
 import CarService from '@/pages/CarService'
 import Personal from '@/pages/Personal'
+import jiaYou from '@/pages/jiayouliang'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -31,6 +32,11 @@ export default new Router({
       path: '/Personal',
       name: 'Personal',
       component: Personal
+    },
+    {
+      path: '/jiayouliang/:id',
+      name: 'jiayouliang',
+      component: jiaYou
     }
   ]
 })
