@@ -2,7 +2,7 @@
 <template>
   <div class="wrapper-box">
     <swiper :options="swiperOptions" class="swiper-box">
-      <swiper-slide v-for="item in banners">
+      <swiper-slide v-for="item in banners" v-bind:key="item.id">
         <div class="img-box"><img :src="item.img_url"></div>
       </swiper-slide>
     </swiper>
@@ -107,13 +107,13 @@ export default {
       this.loadMoreStationData()
     },
     loadBanner () {
-      return this.$ajax.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/station_banner')
+      return this.$ajax.get('https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/nearby_station')
     },
     loadNearbyStation () {
       return this.$ajax.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/nearby_station')
     },
     loadMoreStation () {
-      return this.$ajax.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/stations/' + this.page + '/10')
+      return this.$ajax.get('https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/stations/' + this.page + '/10')
     },
     loadData () {
       this.$ajax.all([this.loadBanner(), this.loadNearbyStation()])

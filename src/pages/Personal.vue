@@ -26,54 +26,60 @@
         <div class="arrow"><img src="../assets/arrow.png"></div>
       </div>
       <div class="membership-box">
-        <div class="img-box">vip</div>
-        <div class="member-discription">
-          <div class="card">特权会员卡</div>
-          <div class="discount">全年八折停车，98折加油，共享汽车服务会员价</div>
+        <div class="membership">
+          <div class="img-box"><img src="../assets/huangguanvip.png"></div>
+          <div class="member-discription">
+            <div class="card">特权会员卡</div>
+            <div class="discount">全年八折停车，98折加油，共享汽车服务会员价</div>
+          </div>
         </div>
-        <div cladd="more">jian</div>
+        <div class="arrow"><img src="../assets/arrow.png"></div>
       </div>
       <div class="invite-box menu">
           <div class="img-box">
-            <div class="img">tupian</div>
+            <div class="img"><img src="../assets/myinvitaition.png"></div>
             <div class="img-txt">邀请好友赢大礼</div>
           </div>
-          <div class="more">jiantou</div>
+          <div class="arrow"><img src="../assets/arrow.png"></div>
         </div>
       <div class="my-order menu">
         <div class="img-box">
-          <div class="img">tupian</div>
+          <div class="img"><img src="../assets/order.png"></div>
           <div class="img-txt">我的订单</div>
         </div>
-        <div class="more">jiantou</div>
+        <div class="arrow"><img src="../assets/arrow.png"></div>
       </div>
       <div class="goods-order menu">
         <div class="img-box">
-          <div class="img">tupian</div>
+          <div class="img"><img src="../assets/order.png"></div>
           <div class="img-txt">商品订单</div>
         </div>
-        <div class="more">jiantou</div>
+        <div class="arrow"><img src="../assets/arrow.png"></div>
       </div>
       <div class="coupon menu">
         <div class="img-box">
-          <div class="img">tupian</div>
+          <div class="img"><img src="../assets/redpack.png"></div>
           <div class="img-txt">我的优惠券</div>
         </div>
-        <div class="more">jiantou</div>
+        <div class="arrow"><img src="../assets/arrow.png"></div>
       </div>
       <div class="my-colletion menu">
         <div class="img-box">
-          <div class="img">tupian</div>
+          <div class="img"><img src="../assets/mycollect.png"></div>
           <div class="img-txt">我的收藏</div>
         </div>
-        <div class="more">jiantou</div>
+        <div class="arrow"><img src="../assets/arrow.png"></div>
       </div>
       <div class="bind-cellphone menu">
         <div class="img-box">
-          <div class="img">tupian</div>
+          <div class="img"><img src="../assets/bindmobile.png"></div>
           <div class="img-txt">绑定手机号</div>
         </div>
-        <div class="more">jiantou</div>
+        <div class="arrow"><img src="../assets/arrow.png"></div>
+      </div>
+      <div class="build-box">
+        <div class="img-box"><img src="../assets/building.png"></div>
+        <div class="img-txt">App努力开发中，敬请期待1111......</div>
       </div>
     </div>
 </template>
@@ -89,6 +95,7 @@ export default {
   background-color: #F5F5F5;
   min-height: 100vh;
   box-sizing: border-box;
+  padding-bottom: 2rem;
   .header-box{
     height:3.5rem;
     background-color:#F8515F;
@@ -170,25 +177,90 @@ export default {
     background-color: white;
     height:1.6rem;
     display:flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
+    .arrow{
+      margin-right: 0.32rem;
+      width:0.5rem;
+      height: 0.6rem;
+      line-height: 0.6rem;
+      >img{
+        width:0.5rem;
+        height: 0.6rem;
+      }
+    }
+    .membership{
+      display:flex;
+      margin-left:0.32rem;
+    }
     .member-discription{
+      margin-left:0.2rem;
      .card{
        font-size:0.26rem;
+       color:#333333;
      }
       .discount{
         font-size:0.2rem;
-        color:#878787;
+        color:#777777;
         margin-top:0.2rem;
       }
     }
   }
   .menu{
-    height:0.8rem;
+    height:0.88rem;
     display:flex;
     justify-content: space-between;
     background-color: white;
     margin-top:0.03rem;
+    align-items:center;
+    &.invite-box{
+      margin-top:0.3rem;
+      margin-bottom: 0.3rem;
+    }
+    &.bind-cellphone{
+      margin-top:0.2rem;
+    }
+    .img-box{
+      display:flex;
+      margin-left:0.32rem;
+      align-items: center;
+      .img{
+        >img{
+          width:0.5rem;
+          height:0.5rem;
+        }
+      }
+      .img-txt{
+        margin-left:0.2rem;
+      }
+    }
+    .arrow{
+      margin-right: 0.32rem;
+      width:0.5rem;
+      height: 0.6rem;
+      line-height: 0.6rem;
+      >img{
+        width:0.5rem;
+        height: 0.6rem;
+      }
+    }
+  }
+  .build-box{
+    margin-top:0.38rem;
+    height:1rem;
+    display:flex;
+    justify-content: center;
+    color:#8a8a8a;
+    align-items: center;
+    .img-box{
+      >img{
+        width: 0.5rem;
+        height: 0.5rem;
+      }
+    }
+    .img-txt{
+      margin-left:0.2rem;
+    }
   }
 }
 </style>
