@@ -18,7 +18,13 @@
           </div>
         </div>
       </div>
-      <div class="add-car">添加我的爱车</div>
+      <div class="add-car">
+        <div class="img-box">
+          <div class="car-img"><img src="../assets/add.png"></div>
+          <div>添加我的爱车</div>
+        </div>
+        <div class="arrow"><img src="../assets/arrow.png"></div>
+      </div>
       <div class="membership-box">
         <div class="img-box">vip</div>
         <div class="member-discription">
@@ -93,6 +99,7 @@ export default {
     .total{
       display:flex;
       justify-content:space-around;
+      height:0.85rem;
       >div{
         display:flex;
         flex-direction: column;
@@ -100,7 +107,7 @@ export default {
       }
       .add-txt{
         font-size:0.28rem;
-        margin-top:0.15rem;
+        margin-top:0.1rem;
       }
       .add-box {
         position: relative;
@@ -117,14 +124,47 @@ export default {
       }
     }
   }
-  .add-car{
+  .add-car {
     background-color: white;
-    width:90%;
-    height:1.5rem;
-    line-height: 1.5rem;
-    position:relative;
-    top:-0.5rem;
-    left:0.35rem;
+    width: 90%;
+    height: 1.4rem;
+    line-height: 1.4rem;
+    position: relative;
+    top: -0.5rem;
+    /*left:0.35rem;*/
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    .img-box {
+      display:flex;
+      align-items: center;
+      .car-img {
+        margin-left: 0.3rem;
+        margin-right: 0.2rem;
+        width: 0.8rem;
+        height: 0.8rem;
+        /*-webkit-border-radius: 50%;*/
+        /*-moz-border-radius: 50%;*/
+        border-radius: 50%;
+        display: flex;
+        > img {
+          width: 0.8rem;
+          height: 0.8rem;
+          border-radius: 50%;
+        }
+      }
+    }
+    .arrow{
+      margin-right:0.32rem;
+      width:0.5rem;
+      height: 0.6rem;
+      line-height: 0.6rem;
+      >img{
+        width:0.5rem;
+        height: 0.6rem;
+      }
+    }
   }
   .membership-box{
     background-color: white;
