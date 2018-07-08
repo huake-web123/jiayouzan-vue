@@ -5,21 +5,21 @@
       <div class="oil-gun">
         <span>油枪</span>
         <input v-model="oilGun" placeholder="请输入油枪号">
-        <div>{{ gasModel}}</div>
+        <div :class="{gastxt: gasModel=='油枪错误'}">{{ gasModel}}</div>
+        <!--动态绑定class-->
       </div>
       <div class="money-box">
         <span>金额</span>
-        <input v-model="money" placeholder="最大999">
-        <div>{{gasPrice}}</div>
+        <input v-model="money" placeholder="最大999" :disabled="gasModel==''||gasModel=='油枪错误'">
+        <!--判断是双等号，一个等号是赋值，还有变量选gasModel，而不是oilGun.-->
+        <div>{{oilAmount}}</div>
       </div>
       <!--ctrl+Y删除当前行，ctrl+F查找代码-->
-      <div class="money-type">
-        <div class="amount">100元</div>
-        <div class="amount">200元</div>
-        <div class="amount">300元</div>
-        <div class="amount">400元</div>
+      <div class="money-type" v-if="gasModel!==''&gasModel!=='油枪错误'">
+        <div class="amount" v-for="(item, index) in moneyArr" :class='{selected:selectMoneyIndex == index}' @click="changeMoney(item, index)" >{{item}}元</div>
+        <!--关于数据当前index与数组里面所有数据index的匹配思想，如果不用index将会全部加上相同class-->
       </div>
-      <div class="confirm">确认订单</div>
+      <div class="order" :class="{confirm:gasModel!==''&&oilAmount!==''}">确认订单</div>
     </div>
 </template>
 
@@ -34,7 +34,11 @@ export default {
       gasPrice: '',
       oilGun: '',
       money: '',
-      gunArr: ''
+      gunArr: '',
+      oilAmount: '',
+      moneyArr: [100, 200, 300, 400],
+      selectMoney: false,
+      selectMoneyIndex: -1
     }
   },
   mounted () {
@@ -52,9 +56,26 @@ export default {
           this.gasPrice = this.gunArr[i].price
           break
         } else {
-          this.gasModel = '请输入正确油枪号'
+          this.gasModel = '油枪错误'
           this.gasPrice = ''
         }
+      }
+    },
+    money (newValue, oldValue) {
+      newValue = Number(newValue) //  ===  判断包括 类型的判断，所以要将input的值转换成数值
+      // 将选中值比如400元样式取消
+      for (var i = 0; i < this.moneyArr.length; i++) {
+        if (newValue === this.moneyArr[i]) {
+          this.selectMoneyIndex = i
+          break
+        } else {
+          this.selectMoneyIndex = -1
+        }
+      }
+      if (newValue !== '') {
+        this.oilAmount = (newValue / this.gasPrice).toFixed(2) + 'L'
+      } else {
+        this.oilAmount = ''
       }
     }
   },
@@ -68,6 +89,10 @@ export default {
           this.stationName = res[0].data.data.name
           this.gunArr = res[0].data.data.gun_arr
         })
+    },
+    changeMoney (value, index) {
+      this.money = value
+      // this.selectMoneyIndex = index
     }
   }
 }
@@ -102,6 +127,18 @@ export default {
       border:none;
       outline: none;
       padding:0;
+      flex:1;
+      /*占据剩余空间*/
+    }
+    >div{
+      padding-right:0.5rem;
+      width:1.4rem;
+      text-align:right;
+      /*width:1.4rem;*/
+      /*text-align: center;*/
+      &.gastxt{
+        color:red;
+      }
     }
   }
   .money-box {
@@ -117,10 +154,17 @@ export default {
     > input {
       height: 1.05rem;
       margin-left: 0.5rem;
+      background-color:white;
       border:none;
       outline: none;
       /*去掉点击时的黄色边框*/
       padding:0;
+      flex:1;
+    }
+    >div{
+      padding-right:0.5rem;
+      width:1.4rem;
+      text-align:right;
     }
   }
   .money-type{
@@ -131,12 +175,18 @@ export default {
     display:flex;
     justify-content:space-between;
     .amount{
-      background-color:white;
+      background-color:#ffffff;
       width:1.5rem;
       text-align: center;
+      border-radius: 5px;
+      font-size:0.28rem;
+      &.selected{
+        background-color:#eb4553;
+        color:white;
+      }
     }
   }
-  .confirm{
+  .order{
     background-color: #8A8A8A;
     height:0.88rem;
     margin-top:0.4rem;
@@ -146,6 +196,10 @@ export default {
     margin-left:0.3rem;
     margin-right:0.3rem;
     border-radius:0.1rem;
+    &.confirm{
+      background-color:#eb4553;
+      color:white
+    }
   }
 }
 </style>
