@@ -5,10 +5,12 @@
       <div class="oil-gun">
         <span>油枪</span>
         <input v-model="oilGun" placeholder="请输入油枪号">
+        <div>{{ gasModel}}</div>
       </div>
       <div class="money-box">
         <span>金额</span>
         <input v-model="money" placeholder="最大999">
+        <div>{{gasPrice}}</div>
       </div>
       <!--ctrl+Y删除当前行，ctrl+F查找代码-->
       <div class="money-type">
@@ -28,8 +30,11 @@ export default {
     return {
       stationId: '',
       stationName: '',
+      gasModel: '',
+      gasPrice: '',
       oilGun: '',
-      money: ''
+      money: '',
+      gunArr: ''
     }
   },
   mounted () {
@@ -37,6 +42,21 @@ export default {
       this.stationId = this.$route.params.id
       this.getStationDetails()
     })
+  },
+  watch: {
+    oilGun (newOilGun, oldOilGun) {
+      // if(oilGun)
+      for (var i = 0; i < this.gunArr.length; i++) {
+        if (Number(newOilGun) === this.gunArr[i].id) {
+          this.gasModel = this.gunArr[i].gas_no
+          this.gasPrice = this.gunArr[i].price
+          break
+        } else {
+          this.gasModel = '请输入正确油枪号'
+          this.gasPrice = ''
+        }
+      }
+    }
   },
   methods: {
     loadStation () {
@@ -46,6 +66,7 @@ export default {
       this.$ajax.all([this.loadStation()])
         .then((res) => {
           this.stationName = res[0].data.data.name
+          this.gunArr = res[0].data.data.gun_arr
         })
     }
   }
@@ -69,7 +90,8 @@ export default {
   .oil-gun {
     background-color: white;
     height: 1.05rem;
-    diaplay: flex;
+    display: flex;
+    align-items: center;
     >span{
       margin-left:0.3rem;
       color:#010101;
@@ -85,7 +107,8 @@ export default {
   .money-box {
     background-color: white;
     height: 1.05rem;
-    diaplay: flex;
+    display: flex;
+    align-items: center;
     margin-top:0.05rem;
     >span{
       margin-left:0.3rem;

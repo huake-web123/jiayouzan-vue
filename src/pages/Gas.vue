@@ -14,7 +14,7 @@
           <!--nearbyStation是对象，直接调用，注意和数组的区别。v-for是用来循环的，如果只有一个对象就不能循环。-->
           <div class="station-location">{{nearbyStation.location}}</div>
         </div>
-        <div class="station-distance">{{nearbyStation.distance}}</div>
+        <div class="station-distance">{{nearbyStation.distance | distanceFilters}}km</div>
       </div>
     <div class="midcontent">
       <div class="pay-box" @click="gasMessage(nearbyStation.id, nearbyStation.name)">
