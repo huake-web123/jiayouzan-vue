@@ -4,20 +4,21 @@
       <div class="current-station">你当前在：{{stationName}}</div>
       <div class="oil-gun">
         <span>油枪</span>
-        <input v-model="oilGun" placeholder="请输入油枪号">
-        <div :class="{gastxt: gasModel=='油枪错误'}">{{ gasModel}}</div>
+        <!--type="number"控制手机在使用input输入时弹出数字键盘-->
+        <input type="number" pattern="\d*" v-model="oilGun" placeholder="请输入油枪号">
         <!--动态绑定class-->
+        <div :class="{gastxt: gasModel=='油枪错误'}">{{ gasModel}}</div>
       </div>
       <div class="money-box">
         <span>金额</span>
-        <input v-model="money" placeholder="最大999" :disabled="gasModel==''||gasModel=='油枪错误'">
         <!--判断是双等号，一个等号是赋值，还有变量选gasModel，而不是oilGun.-->
+        <input type="number" v-model="money" placeholder="最大999" :disabled="gasModel==''||gasModel=='油枪错误'">
         <div>{{oilAmount}}</div>
       </div>
       <!--ctrl+Y删除当前行，ctrl+F查找代码-->
       <div class="money-type" v-if="gasModel!==''&gasModel!=='油枪错误'">
-        <div class="amount" v-for="(item, index) in moneyArr" :class='{selected:selectMoneyIndex == index}' @click="changeMoney(item, index)" >{{item}}元</div>
         <!--关于数据当前index与数组里面所有数据index的匹配思想，如果不用index将会全部加上相同class-->
+        <div class="amount" v-for="(item, index) in moneyArr" :class='{selected:selectMoneyIndex == index}' @click="changeMoney(item, index)" >{{item}}元</div>
       </div>
       <div class="order" :class="{confirm:gasModel!==''&&oilAmount!==''}">确认订单</div>
     </div>
@@ -49,7 +50,6 @@ export default {
   },
   watch: {
     oilGun (newOilGun, oldOilGun) {
-      // if(oilGun)
       for (var i = 0; i < this.gunArr.length; i++) {
         if (Number(newOilGun) === this.gunArr[i].id) {
           this.gasModel = this.gunArr[i].gas_no
@@ -129,6 +129,7 @@ export default {
       padding:0;
       flex:1;
       /*占据剩余空间*/
+      font-size:0.3rem;
     }
     >div{
       padding-right:0.5rem;
@@ -160,6 +161,7 @@ export default {
       /*去掉点击时的黄色边框*/
       padding:0;
       flex:1;
+      font-size:0.3rem;
     }
     >div{
       padding-right:0.5rem;

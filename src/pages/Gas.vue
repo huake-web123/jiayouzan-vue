@@ -108,7 +108,7 @@ export default {
       // 先执行方法，再改变page的值
     },
     loadBanner () {
-      return this.$ajax.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/station_banner')
+      return this.$ajax.get('https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/station_banner')
     },
     loadNearbyStation () {
       return this.$ajax.get('https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/neaby_station')
