@@ -5,6 +5,7 @@ import Gas from '@/pages/Gas'
 import CarService from '@/pages/CarService'
 import Personal from '@/pages/Personal'
 import jiaYou from '@/pages/jiayouliang'
+import order from '@/pages/Order'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -37,6 +38,11 @@ export default new Router({
       path: '/jiayouliang/:id',
       name: 'jiayouliang',
       component: jiaYou
+    },
+    {
+      path: '/Order/:gasModel/:money',
+      name: 'Order',
+      component: order
     }
   ]
 })

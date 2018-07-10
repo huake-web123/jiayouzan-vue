@@ -46,7 +46,7 @@
     </div>
     <div class="modal-box" v-if="message">
       <div class="message-box">
-        <div class="img-box" @click="closeMessage">X</div>
+        <div class="img-box" @click="closeMessage"><img src="../assets/ios-close-outline.png"></div>
         <div class="confirm-station">请向加油员确认当前加油站名称</div>
         <div class="station-name">{{stationName}}</div>
         <div class="confirm-refueling" @click="jiaYou">确定加油</div>
@@ -270,11 +270,11 @@ export default {
       left: 0;
       bottom: 0;
       right: 0;
-      background-color: rgba(0,0,0,.5);
+      background-color: rgba(0,0,0,.3);
       z-index: 99;
       .message-box {
-        width: 5.5rem;
-        height: 5rem;
+        width: 5.8rem;
+        height: 5.4rem;
         position: absolute;
         transform: translate(-50%, -50%);
         top: 50%;
@@ -282,35 +282,40 @@ export default {
         background-color: white;
         font-size:0.3rem;
         text-align: center;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
+        border-radius: 0.1rem;
         .img-box{
-          margin-left:4.6rem;
-          margin-top:0.2rem;
+          margin-right:0.25rem;
+          margin-top:0.3rem;
+          float:right;
+          >img{
+            width:0.46rem;
+            height:0.46rem;
+          }
         }
         .confirm-station{
-          margin-top:0.3rem;
+          margin-top:1rem;
         }
         .station-name{
-          margin-top:0.3rem;
-          color:red;
+          margin-top:0.56rem;
+          color:#eb4652;
           font-size:0.36rem;
         }
         .confirm-refueling{
-          margin-top:0.3rem;
-          width:4.5rem;
-          height:0.7rem;
+          margin-top:0.5rem;
+          margin-left:0.56rem;
+          margin-right:0.56rem;
+          height:0.72rem;
           line-height:0.7rem;
-          background-color: red;
+          background-color: #eb4652;
           color:white;
+          border-radius: 0.1rem;
         }
         .select-error{
           margin-top:0.2rem;
         }
         .disclaimer{
-          margin-top:0.2rem;
-          color:red;
+          margin-top:0.16rem;
+          color: #eb4652;
         }
       }
     }

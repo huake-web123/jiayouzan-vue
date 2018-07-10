@@ -1,10 +1,10 @@
 <!--Created by hjx on 2018/7/9.-->
 <template>
     <div class="wrapper-box">
-      <div class="header">订单信息</div>
+      <div class="header">订单信息:</div>
       <div class="main-box">
-        <div class="oil-type">92#</div>
-        <div class="money">&yen;400</div>
+        <div class="oil-type">{{this.gasModel}}</div>
+        <div class="money">&yen;{{this.money}}</div>
       </div>
       <div class="discount-box">
         <div class="discount">优惠券</div>
@@ -31,10 +31,35 @@
 
 <script>
 export default {
-  name: ''
+  name: '',
+  data () {
+    return {
+      gasModel: '',
+      money: ''
+    }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.gasModel = this.$route.params.gasModel
+      this.money = this.$route.params.money
+    })
+  }
 }
 </script>
 
 <style lang="less" scoped>
-
+  /*.wrapper-box {*/
+    /*background-color: #F5F5F5;*/
+    /*padding-bottom: 3rem;*/
+    /*min-height: 100vh;*/
+    /*box-sizing: border-box;*/
+    /*.header{*/
+      /*background-color: #F5F5F5;*/
+      /*font-size: 0.3rem;*/
+      /*height: 0.8rem;*/
+      /*line-height: 0.8rem;*/
+      /*padding-left:0.3rem;*/
+      /*color:#262626;*/
+    /*}*/
+  /*}*/
 </style>
