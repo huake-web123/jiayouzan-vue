@@ -3,12 +3,12 @@
     <div class="wrapper-box">
       <div class="header">订单信息:</div>
       <div class="main-box">
-        <div class="oil-type">{{this.gasModel}}#</div>
-        <div class="money">&yen;{{this.money}}</div>
+        <div class="oil-type">{{gasModel}}#</div>
+        <div class="money">&yen;{{money}}</div>
       </div>
       <div class="discount-box">
         <div class="discount">优惠券</div>
-        <div class="discount-txt">暂无可用红包</div>
+        <div class="discount-txt">{{discountMoney}}</div>
       </div>
       <div class="bill-box" @click="addInvoice">
         <div class="bill-title">发票抬头</div>
@@ -67,13 +67,18 @@ export default {
       money: '',
       invoice: false,
       invoiceHead: '',
-      taxNumber: ''
+      taxNumber: '',
+      discount: '',
+      couponsArr: [],
+      coupon: '',
+      discountMoney: 0
     }
   },
   mounted () {
     this.$nextTick(() => {
       this.gasModel = this.$route.params.gasModel
       this.money = this.$route.params.money
+      this.getCoupons()
     })
   },
   methods: {
@@ -82,7 +87,80 @@ export default {
     },
     closeInvocie () {
       this.invoice = false
+    },
+    getCouponsData () {
+      return this.$ajax.get('https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/coupon_invoice')
+    },
+    getCoupons () {
+      this.$ajax.all([this.getCouponsData()])
+        .then((res) => {
+          console.log(this)
+          let arr = res[0].data.coupon
+          this.couponsArr = res[0].data.coupon
+          console.log('this.couponsArr', this.couponsArr)
+          for (var i = 0; i < arr.length; i++) {
+            let timeFlag = this.isInAvailableTime(arr[i].start_time, arr[i].end_time)
+            if (!timeFlag) {
+              continue
+            }
+            let tempDiscountMoney = 0
+            if (this.money >= arr[i].threshold) {
+              if (arr[i].type === 1) {
+                tempDiscountMoney = arr[i].amount
+              } else {
+                tempDiscountMoney = Math.min(this.money * (1 - arr[i].ratio / 10), arr[i].max_discount)
+              }
+            }
+            if (tempDiscountMoney > this.discountMoney) {
+              this.discountMoney = tempDiscountMoney
+            }
+          }
+          if (this.discountMoney === 0) {
+            this.discountMoney = '暂无可用红包'
+          }
+        })
+    },
+    isInAvailableTime (sTime, eTime) {
+      var timestamp = (Date.parse(new Date())) / 1000
+      var startTime = (Date.parse(sTime)) / 1000
+      var endTime = (Date.parse(eTime)) / 1000
+      if (timestamp >= startTime && timestamp <= endTime) {
+        return true
+      } else {
+        return false
+      }
     }
+    // max (a, b) {
+    //     return Math.max(a,b);
+    //     },
+    // getCoupons1 () {
+    //   var that = this
+    //   this.$ajax.all([this.getCouponsData()])
+    //     .then(function (res) {
+    //       console.log(this)
+    //       let arr = res[0].data.coupon
+    //       that.couponsArr = res[0].data.coupon
+    //       console.log('this.couponsArr', that.couponsArr)
+    //       if (arr.length === 0) {
+    //         this.discount = '暂无可用红包'
+    //       } else {
+    //         for (var i = 0; i < arr.length; i++) {
+    //           var timestamp = (Date.parse(new Date())) / 1000
+    //           var startTime = (Date.parse(arr[i].start_time)) / 1000
+    //           var endTime = (Date.parse(arr[i].end_time)) / 1000
+    //           if (timestamp >= startTime && timestamp <= endTime) {
+    //             if (this.money >= arr[i].threshold) {
+    //               if (arr[i].type === 1) {
+    //                 this.payMoney = this.Money - arr[i].amount
+    //               } else {
+    //                 this.payMoney = this.Money * arr[i].ratio
+    //               }
+    //             }
+    //           }
+    //         }
+    //       }
+    //     })
+    // }
   }
 }
 </script>
