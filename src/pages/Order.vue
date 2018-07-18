@@ -27,14 +27,14 @@
         <div class="arrow"><img src="../assets/arrow.png"></div>
       </div>
       <div class="pay-box">
-        <div class="payment">去支付&yen;{{this.money}}</div>
-        <div class="save">(已节省&yen;0)</div>
+        <div class="payment">去支付&yen;{{money-discountMoney}}</div>
+        <div class="save">(已节省&yen;{{discountMoney}})</div>
       </div>
       <div class="modal-box" v-if="invoice">
-        <div class="message-box">
+        <div class="message-box" v-if="addInvoiceHead">
           <div class="add-bill">
             <div>添加发票抬头</div>
-            <div class="img-box"><img src="../assets/ios-close-outline.png"></div>
+            <div class="img-box" @click="closeHead()"><img src="../assets/ios-close-outline.png"></div>
           </div>
           <div class="head-type">
             <div>抬头类型</div>
@@ -52,7 +52,43 @@
             <input v-model="taxNumber">
           </div>
           <div class="save">保存</div>
-          <div class="close" @click="closeInvocie">关闭</div>
+          <div class="close" @click="closeHead">关闭</div>
+        </div>
+        <div class="invoice-box" v-if="!addInvoiceHead">
+          <div class="select-head">
+            <div>请选择发票抬头</div>
+            <div class="img-box" @click="closeInvoice()"><img src="../assets/ios-close-outline.png"></div>
+          </div>
+          <div class="invoiceInfo">
+            <div class="content-left">
+              <div class="select"><img src="../assets/Checked_on.png"></div>
+              <div>
+                <div>哈哈啊</div>
+                <div>1234567</div>
+              </div>
+            </div>
+            <div class="content-right">
+              <div class="default-box">
+                <div class="img-box"><img src="../assets/check.png"></div>
+                <div class="txt">默认使用</div>
+              </div>
+              <div class="modify">
+                <div class="edit">编辑</div>
+                <div class="delete">删除</div>
+              </div>
+            </div>
+          </div>
+          <div class="noInvoice">
+            <div class="img-box"><img src="../assets/check_normal.png"></div>
+            <div>不开发票</div>
+          </div>
+          <div class="footer">
+            <div class="invoice" @click="addHead()">
+              <div class="img-box"><img src="../assets/add_invoice.png"></div>
+              <div>添加发票抬头</div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -66,6 +102,7 @@ export default {
       gasModel: '',
       money: '',
       invoice: false,
+      addInvoiceHead: false,
       invoiceHead: '',
       taxNumber: '',
       discount: '',
@@ -85,8 +122,11 @@ export default {
     addInvoice () {
       this.invoice = true
     },
-    closeInvocie () {
+    closeInvoice () {
       this.invoice = false
+    },
+    closeHead () {
+      this.addInvoiceHead = false
     },
     getCouponsData () {
       return this.$ajax.get('https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/coupon_invoice')
@@ -108,7 +148,7 @@ export default {
               if (arr[i].type === 1) {
                 tempDiscountMoney = arr[i].amount
               } else {
-                tempDiscountMoney = Math.min(this.money * (1 - arr[i].ratio / 10), arr[i].max_discount)
+                tempDiscountMoney = Math.min(this.money * (100 - arr[i].ratio * 10) / 100, arr[i].max_discount)
               }
             }
             if (tempDiscountMoney > this.discountMoney) {
@@ -120,6 +160,12 @@ export default {
           }
         })
     },
+    // getCoupons1 () {
+    //   var that = this
+    //   this.$ajax.all([this.getCouponsData()])
+    //     .then(function (res) {
+    //       console.log(this)
+    // }ES5的方法，外面的this和里面的this不是同一个。
     isInAvailableTime (sTime, eTime) {
       var timestamp = (Date.parse(new Date())) / 1000
       var startTime = (Date.parse(sTime)) / 1000
@@ -129,38 +175,10 @@ export default {
       } else {
         return false
       }
+    },
+    addHead () {
+      this.addInvoiceHead = true
     }
-    // max (a, b) {
-    //     return Math.max(a,b);
-    //     },
-    // getCoupons1 () {
-    //   var that = this
-    //   this.$ajax.all([this.getCouponsData()])
-    //     .then(function (res) {
-    //       console.log(this)
-    //       let arr = res[0].data.coupon
-    //       that.couponsArr = res[0].data.coupon
-    //       console.log('this.couponsArr', that.couponsArr)
-    //       if (arr.length === 0) {
-    //         this.discount = '暂无可用红包'
-    //       } else {
-    //         for (var i = 0; i < arr.length; i++) {
-    //           var timestamp = (Date.parse(new Date())) / 1000
-    //           var startTime = (Date.parse(arr[i].start_time)) / 1000
-    //           var endTime = (Date.parse(arr[i].end_time)) / 1000
-    //           if (timestamp >= startTime && timestamp <= endTime) {
-    //             if (this.money >= arr[i].threshold) {
-    //               if (arr[i].type === 1) {
-    //                 this.payMoney = this.Money - arr[i].amount
-    //               } else {
-    //                 this.payMoney = this.Money * arr[i].ratio
-    //               }
-    //             }
-    //           }
-    //         }
-    //       }
-    //     })
-    // }
   }
 }
 </script>
@@ -279,20 +297,22 @@ export default {
       left: 0;
       bottom: 0;
       right: 0;
-      background-color: #7B7B7B;
+      background-color:rgba(0,0,0,.4);
       z-index: 99;
-      .message-box {
-        position: absolute;
-        top: 0.3rem;
-        bottom: 0.3rem;
-        left: 0.2rem;
-        right: 0.2rem;
+      padding:0.28rem 0.18rem;
+      .message-box{
+        /*position: absolute;*/
+        /*top: 0.28rem;*/
+        /*bottom: 0.28rem;*/
+        /*left: 0.18rem;*/
+        /*right: 0.18rem;*/
         background-color: #F5F5F5;
+        height:100%;
         .add-bill{
           display:flex;
           justify-content:space-between;
           align-items:center;
-          height:0.88rem;
+          height:0.8rem;
           padding-left:0.3rem;
           .img-box{
             margin-right:0.25rem;
@@ -372,6 +392,122 @@ export default {
           text-align: center;
           border:0.01rem solid #8A8A8A;
           color:#8A8A8A;
+        }
+      }
+      .invoice-box{
+        /*position: absolute;*/
+        /*top: 0.3rem;*/
+        /*bottom: 0.3rem;*/
+        /*left: 0.2rem;*/
+        /*right: 0.2rem;*/
+        height:100%;
+        background-color: #F5F5F5;
+        .select-head{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          height:0.8rem;
+          padding-left:0.3rem;
+          .img-box{
+            margin-right:0.25rem;
+            float:right;
+            >img{
+              width:0.46rem;
+              height:0.46rem;
+            }
+          }
+        }
+        .invoiceInfo{
+          height:1.4rem;
+          display:flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: white;
+          .content-left{
+            margin-left:0.2rem;
+            display: flex;
+            align-items: center;
+            .select{
+              height:0.4rem;
+              margin-right: 0.22rem;
+              >img{
+                height:0.4rem;
+              }
+            }
+          }
+          .content-right{
+            display: flex;
+            margin-right: 0.28rem;
+            flex-direction: column;
+            justify-content: center;
+            color:#979797;
+            .default-box{
+              display: flex;
+              justify-content: space-between;
+              .img-box{
+                margin-right: 0.2rem;
+                >img{
+                  width: 0.26rem;
+                }
+              }
+            }
+            .modify{
+              display:flex;
+              margin-top:0.1rem;
+              >div{
+                padding:0.08rem 0.12rem;
+                border:0.01rem solid #979797;
+                border-radius: 0.1rem;
+              }
+              .edit{
+                margin-right: 0.12rem;
+              }
+          }
+          }
+
+        }
+        .noInvoice{
+          margin-top:0.2rem;
+          background-color: #ffffff;
+          display:flex;
+          align-items: center;
+          height:1.4rem;
+          .img-box{
+            height:0.4rem;
+            margin-right: 0.22rem;
+            margin-left:0.2rem;
+            >img{
+              height:0.4rem;
+            }
+          }
+        }
+        .footer{
+          position:absolute;
+          background-color: white;
+          left:0.18rem;
+          right:0.18rem;
+          bottom:0.28rem;
+          height: 1.3rem;
+          .invoice{
+            margin-left:0.3rem;
+            margin-right:0.3rem;
+            height:0.88rem;
+            background-color: #ea4652;
+            margin-top:0.2rem;
+            border-radius: 0.1rem;
+            /*position: absolute;*/
+            /*top: 50%;*/
+            /*left: 50%;*/
+            /*transform: translate(-50%, -50%);*/
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            .img-box{
+              >img{
+                height:0.42rem;
+              }
+            }
+          }
         }
       }
     }
