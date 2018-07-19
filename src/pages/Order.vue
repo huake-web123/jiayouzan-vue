@@ -40,7 +40,7 @@
             <div>抬头类型</div>
             <div class="select">
               <div>个人</div>
-              <div>单位</div>
+              <div class="selected">单位</div>
             </div>
           </div>
           <div class="head-box">
@@ -48,10 +48,10 @@
             <input v-model="invoiceHead">
           </div>
           <div class="tax-box">
-            <div class="head-txt">税号</div>
+            <div class="tax-txt">税号</div>
             <input v-model="taxNumber">
           </div>
-          <div class="save">保存</div>
+          <div class="save" :class="{preserve:invoiceHead!==''&&taxNumber!==''}">保存</div>
           <div class="close" @click="closeHead">关闭</div>
         </div>
         <div class="invoice-box" v-if="!addInvoiceHead">
@@ -59,29 +59,31 @@
             <div>请选择发票抬头</div>
             <div class="img-box" @click="closeInvoice()"><img src="../assets/ios-close-outline.png"></div>
           </div>
-          <div class="invoiceInfo">
-            <div class="content-left">
-              <div class="select"><img src="../assets/Checked_on.png"></div>
-              <div>
-                <div>哈哈啊</div>
-                <div>1234567</div>
+          <div class="scroll">
+            <div class="invoiceInfo" v-for="(item,index) in invoiceArr" v-bind:key="item.id" v-on:click="getIndex(index)">
+              <div class="left">
+                <div class="img-box" :class='{selected:invoiceIndex == index}'></div>
+                <div>
+                  <div>{{item.name}}</div>
+                  <div class="number">{{item.invoice_no}}</div>
+                </div>
               </div>
-            </div>
-            <div class="content-right">
-              <div class="default-box">
-                <div class="img-box"><img src="../assets/check.png"></div>
-                <div class="txt">默认使用</div>
-              </div>
-              <div class="modify">
-                <div class="edit">编辑</div>
-                <div class="delete">删除</div>
+              <div class="right" v-if="item.id !== 0">
+                <div class="default-box">
+                  <div class="img-box" :class='{selected:invoiceIndex == index}'></div>
+                  <div class="txt">默认使用</div>
+                </div>
+                <div class="modify">
+                  <div class="edit">编辑</div>
+                  <div class="delete">删除</div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="noInvoice">
-            <div class="img-box"><img src="../assets/check_normal.png"></div>
-            <div>不开发票</div>
-          </div>
+          <!--<div class="noInvoice">-->
+            <!--<div class="img-box"><img src="../assets/check_normal.png"></div>-->
+            <!--<div>不开发票</div>-->
+          <!--</div>-->
           <div class="footer">
             <div class="invoice" @click="addHead()">
               <div class="img-box"><img src="../assets/add_invoice.png"></div>
@@ -107,8 +109,10 @@ export default {
       taxNumber: '',
       discount: '',
       couponsArr: [],
+      invoiceArr: [],
       coupon: '',
-      discountMoney: 0
+      discountMoney: 0,
+      invoiceIndex: -1
     }
   },
   mounted () {
@@ -138,6 +142,8 @@ export default {
           let arr = res[0].data.coupon
           this.couponsArr = res[0].data.coupon
           console.log('this.couponsArr', this.couponsArr)
+          this.invoiceArr = res[0].data.invoice
+          this.invoiceArr.push({'id': 0, 'name': '不开发票', 'invoice_no': ''})
           for (var i = 0; i < arr.length; i++) {
             let timeFlag = this.isInAvailableTime(arr[i].start_time, arr[i].end_time)
             if (!timeFlag) {
@@ -178,6 +184,9 @@ export default {
     },
     addHead () {
       this.addInvoiceHead = true
+    },
+    getIndex: function (index) {
+      this.invoiceIndex = index
     }
   }
 }
@@ -332,6 +341,22 @@ export default {
           padding-left:0.3rem;
           .select{
             display:flex;
+            margin-right:0.3rem;
+            >div{
+              width: 1.04rem;
+              height:0.6rem;
+              line-height: 0.6rem;
+              text-align: center;
+              border:1px solid #979797;
+              border-radius: 0.1rem;
+              font-size: 0.28rem;
+              color:#979797;
+              margin-left:0.2rem;
+            }
+            .selected{
+              background-color: #e54856;
+              color: white;
+            }
           }
         }
         .head-box{
@@ -342,8 +367,11 @@ export default {
           background-color: white;
           margin-top:0.05rem;
           padding-left:0.3rem;
+          .head-txt{
+            width: 1.46rem;
+          }
           > input {
-            height: 1.05rem;
+            height: 1rem;
             margin-left: 0.5rem;
             border:none;
             outline: none;
@@ -360,8 +388,11 @@ export default {
           background-color: white;
           margin-top:0.05rem;
           padding-left:0.3rem;
+          .tax-txt{
+            width: 1.46rem;
+          }
           > input {
-            height: 1.05rem;
+            height: 1rem;
             margin-left: 0.5rem;
             border:none;
             outline: none;
@@ -380,6 +411,10 @@ export default {
           border-radius: 0.1rem;
           text-align: center;
           color:white;
+          &.preserve{
+            background-color:#eb4553;
+            color:white;
+          }
         }
         .close{
           margin-top:0.2rem;
@@ -395,11 +430,6 @@ export default {
         }
       }
       .invoice-box{
-        /*position: absolute;*/
-        /*top: 0.3rem;*/
-        /*bottom: 0.3rem;*/
-        /*left: 0.2rem;*/
-        /*right: 0.2rem;*/
         height:100%;
         background-color: #F5F5F5;
         .select-head{
@@ -417,54 +447,77 @@ export default {
             }
           }
         }
-        .invoiceInfo{
-          height:1.4rem;
-          display:flex;
-          justify-content: space-between;
-          align-items: center;
-          background-color: white;
-          .content-left{
-            margin-left:0.2rem;
-            display: flex;
+        .scroll{
+          height:10.1rem;
+          overflow: auto;
+          .invoiceInfo{
+            height:1.4rem;
+            display:flex;
+            justify-content: space-between;
             align-items: center;
-            .select{
-              height:0.4rem;
-              margin-right: 0.22rem;
-              >img{
+            background-color: white;
+            margin-bottom:0.05rem;
+            .left{
+              margin-left:0.2rem;
+              display: flex;
+              align-items: center;
+              font-size: 0.3rem;
+              .img-box{
+                width: 0.4rem;
                 height:0.4rem;
+                margin-right: 0.22rem;
+                background-image: url("../assets/check_normal.png");
+                background-size: 0.4rem;
+                &.selected{
+                  background-image: url("../assets/Checked_on.png");
+                  background-size: 0.4rem;
+                }
+                /*>img{*/
+                  /*height:0.4rem;*/
+                /*}*/
+              }
+              .number{
+                color:#979797;
+                margin-top:0.2rem;
               }
             }
-          }
-          .content-right{
-            display: flex;
-            margin-right: 0.28rem;
-            flex-direction: column;
-            justify-content: center;
-            color:#979797;
-            .default-box{
+            .right{
               display: flex;
-              justify-content: space-between;
-              .img-box{
-                margin-right: 0.2rem;
-                >img{
+              margin-right: 0.28rem;
+              flex-direction: column;
+              justify-content: center;
+              color:#979797;
+              font-size:0.26rem;
+              .default-box{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .img-box{
+                  height: 0.26rem;
                   width: 0.26rem;
+                  margin-right: 0.2rem;
+                  background-image: url("../assets/un_check.png");
+                  background-size: 0.26rem;
+                  &.selected{
+                    background-image: url("../assets/check.png");
+                  }
+                }
+              }
+              .modify{
+                display:flex;
+                margin-top:0.2rem;
+                >div{
+                  padding:0.08rem 0.12rem;
+                  border:0.01rem solid #979797;
+                  border-radius: 0.1rem;
+                }
+                .edit{
+                  margin-right: 0.12rem;
                 }
               }
             }
-            .modify{
-              display:flex;
-              margin-top:0.1rem;
-              >div{
-                padding:0.08rem 0.12rem;
-                border:0.01rem solid #979797;
-                border-radius: 0.1rem;
-              }
-              .edit{
-                margin-right: 0.12rem;
-              }
-          }
-          }
 
+          }
         }
         .noInvoice{
           margin-top:0.2rem;

@@ -20,7 +20,7 @@
         <!--关于数据当前index与数组里面所有数据index的匹配思想，如果不用index将会全部加上相同class-->
         <div class="amount" v-for="(item, index) in moneyArr" :class='{selected:selectMoneyIndex == index}' @click="changeMoney(item, index)" >{{item}}元</div>
       </div>
-      <div class="order" :class="{confirm:gasModel!==''&&oilAmount!==''}" @click="confirmOrder">确认订单</div>
+      <div class="order" :class="{confirm:gasModel!==''&&money!==''}" @click="confirmOrder">确认订单</div>
     </div>
 </template>
 
@@ -204,7 +204,7 @@ export default {
     border-radius:0.1rem;
     &.confirm{
       background-color:#eb4553;
-      color:white
+      color:white;
     }
   }
 }
