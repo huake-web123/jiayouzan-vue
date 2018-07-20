@@ -6,7 +6,7 @@
         <div class="oil-type">{{gasModel}}#</div>
         <div class="money">&yen;{{money}}</div>
       </div>
-      <div class="discount-box">
+      <div class="discount-box" @click="selectCounpon()">
         <div class="discount">优惠券</div>
         <div class="discount-txt">{{discountMoney}}</div>
       </div>
@@ -29,6 +29,23 @@
       <div class="pay-box">
         <div class="payment">去支付&yen;{{money-discountMoney}}</div>
         <div class="save">(已节省&yen;{{discountMoney}})</div>
+      </div>
+      <div class="coupon-box" v-if="isCounpon">
+        <div class="coupon" v-for="item in couponsArr" :key="item.id">
+          <div class="content-left">
+            <div class="discount">
+              <span class="num">20</span>
+              <span class="txt">元</span>
+              <span class="area">(武汉市)</span>
+            </div>
+            <div class="time-box">
+              <div class="valid">有效时间：</div>
+              <div class="time">{{item.start_time}}&nbsp;—&nbsp;{{item.end_time}}</div>
+            </div>
+            <div class="min-amount">满{{item.threshold}}元可用</div>
+          </div>
+          <div class="content-right">{{item.type | typeFilters}}</div>
+        </div>
       </div>
       <div class="modal-box" v-if="invoice">
         <div class="message-box" v-if="addInvoiceHead">
@@ -111,8 +128,23 @@ export default {
       couponsArr: [],
       invoiceArr: [],
       coupon: '',
+      isCounpon: false,
       discountMoney: 0,
-      invoiceIndex: -1
+      invoiceIndex: 0
+    }
+  },
+  filters: {
+    typeFilters(type) {
+      let str = ''
+      switch (type) {
+        case 1:
+          str = '满减券'
+          break
+        case 2:
+          str = '折扣券'
+          break
+      }
+      return str
     }
   },
   mounted () {
@@ -131,6 +163,9 @@ export default {
     },
     closeHead () {
       this.addInvoiceHead = false
+    },
+    selectCounpon () {
+      this.isCounpon = true
     },
     getCouponsData () {
       return this.$ajax.get('https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/coupon_invoice')
@@ -561,6 +596,65 @@ export default {
               }
             }
           }
+        }
+      }
+    }
+    .coupon-box{
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background-color:#e6e6e6;
+      z-index: 999;
+      padding-left:0.2rem;
+      padding-right:0.2rem;
+      .coupon{
+        height:2rem;
+        background: url("../assets/coupon.png") no-repeat;
+        margin-top:0.2rem;
+        background-size:cover;
+        /*让背景图自适应*/
+        display:flex;
+        justify-content: space-between;
+        /*用insert键可以改变鼠标光标状态*/
+        .content-left{
+          margin-left: 0.2rem;
+          .discount{
+            /*display: flex;*/
+            .num{
+              color:#F99E47;
+              font-size:0.5rem;
+            }
+            .txt{}
+            .area{
+              margin-left: 0.2rem;
+              color:#F99E47;
+            }
+          }
+          .time-box{
+            font-size:0.16rem;
+            .valid{
+              color: #B1B1B1;
+            }
+            .time{
+              color:#F99E47;
+            }
+          }
+          .min-amount{
+            font-size:0.16rem;
+            margin-top:0.1rem;
+            color: #B1B1B1;
+          }
+        }
+        .content-right{
+          width: 1.4rem;
+          height:0.6rem;
+          line-height: 0.6rem;
+          color:white;
+          text-align: center;
+          background-color: #F99E47;
+          margin-top:0.2rem;
         }
       }
     }
