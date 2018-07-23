@@ -8,12 +8,12 @@
       </div>
       <div class="discount-box" @click="selectCounpon()">
         <div class="discount">优惠券</div>
-        <div class="discount-txt">{{discountMoney}}</div>
+        <div class="discount-txt">&yen;{{discountMoney}}</div>
       </div>
       <div class="bill-box" @click="addInvoice">
         <div class="bill-title">发票抬头</div>
         <div class="img-box">
-          <div class="bill-txt">哈哈啊</div>
+          <div class="bill-txt">{{invoiceName}}</div>
           <div class="arrow"><img src="../assets/arrow.png"></div>
         </div>
       </div>
@@ -36,7 +36,10 @@
             <div class="txt">请选择优惠券</div>
             <div class="img-box" @click="closeCoupon()"><img src="../assets/ios-close-outline.png"></div>
           </div>
-          <div class="coupon" v-for="(item,index) in couponsArr" :key="item.id" @click="getCouponIndex(item,index)">
+          <div class="coupon" v-for="(item,index) in couponsArr"
+               :key="item.id"
+               v-if="isAvaliableFlag(item)"
+               @click="getCouponIndex(item,index)">
             <div class="content-left">
               <div class="img-box" :class='{selected:couponIndex == index}'></div>
               <div class="main-content">
@@ -86,7 +89,7 @@
             <div class="img-box" @click="closeInvoice()"><img src="../assets/ios-close-outline.png"></div>
           </div>
           <div class="scroll">
-            <div class="invoiceInfo" v-for="(item,index) in invoiceArr" v-bind:key="item.id" v-on:click="getIndex(index)">
+            <div class="invoiceInfo" v-for="(item,index) in invoiceArr" v-bind:key="item.id" v-on:click="getIndex(item,index)">
               <div class="left">
                 <div class="img-box" :class='{selected:invoiceIndex == index}'></div>
                 <div>
@@ -141,7 +144,8 @@ export default {
       isCounpon: false,
       discountMoney: 0,
       discountCouponId: 0,
-      invoiceIndex: 0
+      invoiceIndex: 0,
+      invoiceName: ''
       // time: ''
     }
   },
@@ -207,35 +211,12 @@ export default {
       this.$ajax.all([this.getCouponsData()])
         .then((res) => {
           console.log(this)
-          let arr = res[0].data.coupon
           this.couponsArr = res[0].data.coupon
           console.log('this.couponsArr', this.couponsArr)
           this.invoiceArr = res[0].data.invoice
+          this.invoiceName = this.invoiceArr[0].name
           this.invoiceArr.push({'id': 0, 'name': '不开发票', 'invoice_no': ''})
-          for (var i = 0; i < arr.length; i++) {
-            let timeFlag = this.isInAvailableTime(arr[i].start_time, arr[i].end_time)
-            if (!timeFlag) {
-              continue
-            }
-            let tempDiscountMoney = 0
-            let tempId = 0
-            let tempIndex = -1
-            if (this.money >= arr[i].threshold) {
-              tempId = arr[i].id
-              tempIndex = i
-              if (arr[i].type === 1) {
-                tempDiscountMoney = arr[i].amount
-              } else {
-                tempDiscountMoney = Math.min(this.money * (100 - arr[i].ratio * 10) / 100, arr[i].max_discount)
-              }
-            }
-            this.discountMoney = tempDiscountMoney
-            this.discountCouponId = tempId
-            this.couponIndex = tempIndex
-          }
-          if (this.discountMoney === 0) {
-            this.discountMoney = '暂无可用红包'
-          }
+          this.calcDiscount()
         })
     },
     // getCoupons1 () {
@@ -254,17 +235,50 @@ export default {
         return false
       }
     },
+    /*
+    *  比较得到最优优惠券
+    * */
+    calcDiscount () {
+      let arr = this.couponsArr
+      for (var i = 0; i < arr.length; i++) {
+        let timeFlag = this.isInAvailableTime(arr[i].start_time, arr[i].end_time)
+        if (!timeFlag) {
+          continue
+        }
+        let tempDiscountMoney = 0
+        let tempId = 0
+        let tempIndex = -1
+        if (this.money >= arr[i].threshold) {
+          tempId = arr[i].id
+          tempIndex = i
+          if (arr[i].type === 1) {
+            tempDiscountMoney = arr[i].amount
+          } else {
+            tempDiscountMoney = Math.min(this.money * (100 - arr[i].ratio * 10) / 100, arr[i].max_discount)
+          }
+        }
+        if (tempDiscountMoney > this.discountMoney) {
+          this.discountMoney = tempDiscountMoney
+          this.discountCouponId = tempId
+          this.couponIndex = tempIndex
+        }
+      }
+      if (this.discountMoney === 0) {
+        this.discountMoney = '暂无可用红包'
+      }
+    },
     addHead () {
       this.addInvoiceHead = true
     },
-    getIndex: function (index) {
+    getIndex (item, index) {
       this.invoiceIndex = index
+      this.invoiceName = item.name
     },
     getCouponIndex (item, index) {
-      this.couponIndex = index
       let timeFlag = this.isInAvailableTime(item.start_time, item.end_time)
       if (timeFlag) {
         if (this.money >= item.threshold) {
+          this.couponIndex = index
           if (item.type === 1) {
             this.discountMoney = item.amount
           } else {
@@ -274,6 +288,13 @@ export default {
       } else {
         this.discountMoney = '暂无可用红包'
       }
+    },
+    isAvaliableFlag (item) {
+      let timeFlag = this.isInAvailableTime(item.start_time, item.end_time)
+      if (timeFlag && this.money >= item.threshold) {
+        return true
+      }
+      return false
     }
   }
 }
@@ -397,11 +418,6 @@ export default {
       z-index: 99;
       padding:0.28rem 0.18rem;
       .message-box{
-        /*position: absolute;*/
-        /*top: 0.28rem;*/
-        /*bottom: 0.28rem;*/
-        /*left: 0.18rem;*/
-        /*right: 0.18rem;*/
         background-color: #F5F5F5;
         height:100%;
         .add-bill{

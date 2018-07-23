@@ -317,13 +317,13 @@ export default {
     .main-content{
       height: 2.5rem;
       margin-top:0.2rem;
-      padding-left: 0.2rem;
-      padding-right: 0.2rem;
       .gas-station{
         height: 0.5rem;
         background-color: white;
         display: flex;
         justify-content: space-between;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
         .station-box{
           display: flex;
           justify-content: space-between;
@@ -333,11 +333,15 @@ export default {
         height: 1.5rem;
         background-color: white;
         margin-top: 0.05rem;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
       }
       .pay-box{
         height: 0.5rem;
         background-color: white;
         margin-top: 0.05rem;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
       }
     }
   }
