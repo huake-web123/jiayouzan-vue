@@ -31,20 +31,29 @@
         <div class="save">(已节省&yen;{{discountMoney}})</div>
       </div>
       <div class="coupon-box" v-if="isCounpon">
-        <div class="coupon" v-for="item in couponsArr" :key="item.id">
-          <div class="content-left">
-            <div class="discount">
-              <span class="num">20</span>
-              <span class="txt">元</span>
-              <span class="area">(武汉市)</span>
-            </div>
-            <div class="time-box">
-              <div class="valid">有效时间：</div>
-              <div class="time">{{item.start_time}}&nbsp;—&nbsp;{{item.end_time}}</div>
-            </div>
-            <div class="min-amount">满{{item.threshold}}元可用</div>
+        <div class="main">
+          <div class="head-title">
+            <div class="txt">请选择优惠券</div>
+            <div class="img-box" @click="closeCoupon()"><img src="../assets/ios-close-outline.png"></div>
           </div>
-          <div class="content-right">{{item.type | typeFilters}}</div>
+          <div class="coupon" v-for="(item,index) in couponsArr" :key="item.id" @click="getCouponIndex(item,index)">
+            <div class="content-left">
+              <div class="img-box" :class='{selected:couponIndex == index}'></div>
+              <div class="main-content">
+                <div class="discount">
+                  <span class="num">{{item | itemFilters}}</span>
+                  <span class="txt">{{item.type | itemUnitFilters}}</span>
+                  <span class="area">(武汉市)</span>
+                </div>
+                <div class="time-box">
+                  <div class="valid">有效时间：</div>
+                  <div class="time">{{item.start_time | timeFilters}}&nbsp;—&nbsp;{{item.end_time | timeFilters}}</div>
+                </div>
+                <div class="min-amount">满{{item.threshold}}元可用</div>
+              </div>
+              </div>
+            <div class="content-right">{{item.type | typeFilters}}</div>
+          </div>
         </div>
       </div>
       <div class="modal-box" v-if="invoice">
@@ -128,13 +137,16 @@ export default {
       couponsArr: [],
       invoiceArr: [],
       coupon: '',
+      couponIndex: -1,
       isCounpon: false,
       discountMoney: 0,
+      discountCouponId: 0,
       invoiceIndex: 0
+      // time: ''
     }
   },
   filters: {
-    typeFilters(type) {
+    typeFilters (type) {
       let str = ''
       switch (type) {
         case 1:
@@ -145,6 +157,24 @@ export default {
           break
       }
       return str
+    },
+    timeFilters (time) {
+      time = time.split(' ')[0]
+      return time
+    },
+    itemFilters (value) {
+      if (value.type === 1) {
+        return value.amount
+      } else {
+        return value.ratio
+      }
+    },
+    itemUnitFilters (value) {
+      if (value === 1) {
+        return '元'
+      } else {
+        return '折'
+      }
     }
   },
   mounted () {
@@ -167,6 +197,9 @@ export default {
     selectCounpon () {
       this.isCounpon = true
     },
+    closeCoupon () {
+      this.isCounpon = false
+    },
     getCouponsData () {
       return this.$ajax.get('https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/coupon_invoice')
     },
@@ -185,16 +218,20 @@ export default {
               continue
             }
             let tempDiscountMoney = 0
+            let tempId = 0
+            let tempIndex = -1
             if (this.money >= arr[i].threshold) {
+              tempId = arr[i].id
+              tempIndex = i
               if (arr[i].type === 1) {
                 tempDiscountMoney = arr[i].amount
               } else {
                 tempDiscountMoney = Math.min(this.money * (100 - arr[i].ratio * 10) / 100, arr[i].max_discount)
               }
             }
-            if (tempDiscountMoney > this.discountMoney) {
-              this.discountMoney = tempDiscountMoney
-            }
+            this.discountMoney = tempDiscountMoney
+            this.discountCouponId = tempId
+            this.couponIndex = tempIndex
           }
           if (this.discountMoney === 0) {
             this.discountMoney = '暂无可用红包'
@@ -222,6 +259,21 @@ export default {
     },
     getIndex: function (index) {
       this.invoiceIndex = index
+    },
+    getCouponIndex (item, index) {
+      this.couponIndex = index
+      let timeFlag = this.isInAvailableTime(item.start_time, item.end_time)
+      if (timeFlag) {
+        if (this.money >= item.threshold) {
+          if (item.type === 1) {
+            this.discountMoney = item.amount
+          } else {
+            this.discountMoney = Math.min(this.money * (100 - item.ratio * 10) / 100, item.max_discount)
+          }
+        }
+      } else {
+        this.discountMoney = '暂无可用红包'
+      }
     }
   }
 }
@@ -507,9 +559,6 @@ export default {
                   background-image: url("../assets/Checked_on.png");
                   background-size: 0.4rem;
                 }
-                /*>img{*/
-                  /*height:0.4rem;*/
-                /*}*/
               }
               .number{
                 color:#979797;
@@ -605,58 +654,98 @@ export default {
       left: 0;
       bottom: 0;
       right: 0;
-      background-color:#e6e6e6;
-      z-index: 999;
-      padding-left:0.2rem;
-      padding-right:0.2rem;
-      .coupon{
-        height:2rem;
-        background: url("../assets/coupon.png") no-repeat;
-        margin-top:0.2rem;
-        background-size:cover;
-        /*让背景图自适应*/
-        display:flex;
-        justify-content: space-between;
-        /*用insert键可以改变鼠标光标状态*/
-        .content-left{
-          margin-left: 0.2rem;
-          .discount{
-            /*display: flex;*/
-            .num{
-              color:#F99E47;
-              font-size:0.5rem;
+      background-color:rgba(0,0,0,.4);
+      z-index: 99;
+      padding:0.28rem 0.18rem;
+      .main{
+        background-color:#e6e6e6;
+        height:100%;
+        border-radius: 0.1rem;
+        .head-title{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          height:0.8rem;
+          padding-left:0.3rem;
+          background-color:#F5F5F5;
+          border-radius: 0.1rem;
+          .img-box{
+            margin-right:0.25rem;
+            float:right;
+            >img{
+              width:0.46rem;
+              height:0.46rem;
             }
-            .txt{}
-            .area{
-              margin-left: 0.2rem;
-              color:#F99E47;
-            }
-          }
-          .time-box{
-            font-size:0.16rem;
-            .valid{
-              color: #B1B1B1;
-            }
-            .time{
-              color:#F99E47;
-            }
-          }
-          .min-amount{
-            font-size:0.16rem;
-            margin-top:0.1rem;
-            color: #B1B1B1;
           }
         }
-        .content-right{
-          width: 1.4rem;
-          height:0.6rem;
-          line-height: 0.6rem;
-          color:white;
-          text-align: center;
-          background-color: #F99E47;
+        .coupon{
+          height:2rem;
+          background: url("../assets/coupon.png") no-repeat;
           margin-top:0.2rem;
+          margin-left:0.2rem;
+          margin-right: 0.2rem;
+          background-size:cover;
+          /*让背景图自适应*/
+          display:flex;
+          justify-content: space-between;
+          /*用insert键可以改变鼠标光标状态*/
+          .content-left{
+            display: flex;
+            .img-box{
+              width: 0.4rem;
+              height:0.4rem;
+              margin-left:0.2rem;
+              margin-top:0.2rem;
+              background-image: url("../assets/check_normal.png");
+              background-size: 0.4rem;
+              &.selected{
+                background-image: url("../assets/select_coupon.png");
+                background-size: 0.4rem;
+              }
+            }
+            .main-content{
+              margin-left: 0.2rem;
+              .discount{
+                /*display: flex;*/
+                .num{
+                  color:#F99E47;
+                  font-size:0.5rem;
+                }
+                .txt{}
+                .area{
+                  margin-left: 0.2rem;
+                  color:#F99E47;
+                }
+              }
+              .time-box{
+                font-size:0.16rem;
+                .valid{
+                  color: #B1B1B1;
+                }
+                .time{
+                  color:#F99E47;
+                }
+              }
+              .min-amount{
+                font-size:0.16rem;
+                margin-top:0.1rem;
+                color: #B1B1B1;
+              }
+            }
+          }
+
+          .content-right{
+            width: 1.4rem;
+            height:0.6rem;
+            line-height: 0.6rem;
+            color:white;
+            text-align: center;
+            background-color: #F99E47;
+            margin-top:0.2rem;
+          }
         }
       }
+
     }
   }
 </style>

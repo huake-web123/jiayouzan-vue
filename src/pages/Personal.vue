@@ -42,7 +42,7 @@
           </div>
           <div class="arrow"><img src="../assets/arrow.png"></div>
         </div>
-      <div class="my-order menu">
+      <div class="my-order menu" @click="openOrder()">
         <div class="img-box">
           <div class="img"><img src="../assets/order.png"></div>
           <div class="img-txt">我的订单</div>
@@ -79,14 +79,49 @@
       </div>
       <div class="build-box">
         <div class="img-box"><img src="../assets/building.png"></div>
-        <div class="img-txt">App努力开发中，敬请期待1111......</div>
+        <div class="img-txt">App努力开发中，敬请期待......</div>
+      </div>
+      <div class="modal-box" v-if="order">
+        <div class="header">
+          <div>全部</div>
+          <div>待付款</div>
+          <div>待使用</div>
+          <div>退款中</div>
+        </div>
+        <div class="main-content">
+          <div class="gas-station">
+            <div class="station-box">
+              <div class="img-box"><img></div>
+              <div class="station-name">加油站</div>
+            </div>
+            <div class="state">已完成</div>
+          </div>
+          <div class="oil-box">
+            <div class="oil-gun"><img></div>
+            <div>2号油枪</div>
+          </div>
+          <div class="pay-box">
+            <span>实付：</span>
+            <span>&yen;</span>
+          </div>
+        </div>
       </div>
     </div>
 </template>
 
 <script>
 export default {
-  name: ''
+  name: '',
+  data () {
+    return {
+      order: false
+    }
+  },
+  methods: {
+    openOrder () {
+      this.order = true
+    }
+  }
 }
 </script>
 
@@ -260,6 +295,50 @@ export default {
     }
     .img-txt{
       margin-left:0.2rem;
+    }
+  }
+  .modal-box{
+    position:absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #F5F5F5;
+    z-index: 99;
+    .header{
+      height:0.88rem;
+      background-color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 0.2rem;
+      padding-right: 0.2rem;
+    }
+    .main-content{
+      height: 2.5rem;
+      margin-top:0.2rem;
+      padding-left: 0.2rem;
+      padding-right: 0.2rem;
+      .gas-station{
+        height: 0.5rem;
+        background-color: white;
+        display: flex;
+        justify-content: space-between;
+        .station-box{
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+      .oil-box{
+        height: 1.5rem;
+        background-color: white;
+        margin-top: 0.05rem;
+      }
+      .pay-box{
+        height: 0.5rem;
+        background-color: white;
+        margin-top: 0.05rem;
+      }
     }
   }
 }
