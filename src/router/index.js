@@ -6,6 +6,7 @@ import CarService from '@/pages/CarService'
 import Personal from '@/pages/Personal'
 import jiaYou from '@/pages/jiayouliang'
 import order from '@/pages/Order'
+import orderList from '@/pages/orderList'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -43,6 +44,11 @@ export default new Router({
       path: '/Order/:gasModel/:money',
       name: 'Order',
       component: order
+    },
+    {
+      path: '/orderList',
+      name: 'orderList',
+      component: orderList
     }
   ]
 })
