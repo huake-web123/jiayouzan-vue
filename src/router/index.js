@@ -7,13 +7,14 @@ import Personal from '@/pages/Personal'
 import jiaYou from '@/pages/jiayouliang'
 import order from '@/pages/Order'
 import orderList from '@/pages/orderList'
+import Login from '@/pages/login'
 Vue.use(Router)
 export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
-      redirect: 'HomePage'
+      name: 'Login',
+      redirect: 'login'
     },
     {
       path: '/HomePage',
@@ -49,6 +50,11 @@ export default new Router({
       path: '/orderList',
       name: 'orderList',
       component: orderList
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     }
   ]
 })
