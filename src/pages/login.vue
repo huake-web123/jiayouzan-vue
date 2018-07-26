@@ -1,7 +1,8 @@
 <!--Created by hjx on 2018/7/25.-->
 <template>
-    <div class="wrapper-box">
+    <div class="wrapper-box" :class="{disappear:success}">
       <div class="main-content">
+        <div class="login-token"><img  src="../assets/login_token.png"></div>
         <div class="head-box">账号密码登录</div>
         <div class="user-box">
           <div class="user">
@@ -26,7 +27,8 @@ export default {
   data () {
     return {
       userName: '',
-      passWord: ''
+      passWord: '',
+      success: false
     }
   },
   mounted () {
@@ -53,7 +55,11 @@ export default {
       }).then((res) => {
         console.log(res.data.token)
         Cookies.set('token', res.data.token, { expires: 7, path: '' })
-        this.$router.push({path: '/HomePage'})
+        this.success = true
+        setTimeout(() => {
+          this.$router.push({path: '/HomePage'})
+        }, 500)
+        // this.$router.push({path: '/HomePage'})
       })
     }
   }
@@ -66,58 +72,79 @@ export default {
     min-height: 100vh;
     box-sizing: border-box;
     justify-content: center;
-    align-items: center;
     background-color: #F5F5F5;
+    transition: all 0.5s ease-in-out;
+    &.disappear{
+      transform:translateY(-100vh);
+    }
     .main-content{
       /*height: 3rem;*/
       /*width: 4rem;*/
+      margin-top: 0.8rem;
+      .login-token{
+        margin: 0 auto;
+        text-align:center;
+        >img{
+          height: 2.5rem;
+        }
+      }
       .head-box{
         height: 1rem;
         font-size: 0.4rem;
         font-weight:bold;
+        margin-top: 0.5rem;
       }
       .user-box{
         .user{
           height: 1rem;
           display: flex;
           align-items: center;
+          border-bottom: 1px solid #ccc;
           >img{
             height: 0.5rem;
             width: 0.5rem;
-            margin-right: 0.2rem;
+            margin-right: 0.3rem;
           }
           >input{
             border:none;
-            height: 0.5rem;
-            width: 4.8rem;
+            outline: none;
+            height: 0.8rem;
+            width: 4.5rem;
+            background-color: #F5F5F5;
           }
         }
         .pass{
           height: 1rem;
           display: flex;
           margin-top: 0.1rem;
+          align-items: center;
+          border-bottom: 1px solid #ccc;
           >img{
             height: 0.5rem;
             width: 0.5rem;
-            margin-right: 0.2rem;
+            margin-right: 0.3rem;
           }
           >input{
             border:none;
-            height: 0.5rem;
-            width: 4.8rem;
+            outline: none;
+            height: 0.8rem;
+            width: 4.5rem;
+            background-color: #F5F5F5;
           }
         }
       }
       .login-box{
-        margin-top: 0.3rem;
+        margin-top: 0.8rem;
         height: 1rem;
         line-height: 1rem;
         text-align:center;
         border-radius: 0.1rem;
         background-color: #ccc;
+        pointer-events: none;
         &.selected{
           color: white;
           background-color: #eb4652;
+          pointer-events: auto;
         }
       }
     }

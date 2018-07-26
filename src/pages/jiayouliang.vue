@@ -202,9 +202,11 @@ export default {
     margin-left:0.3rem;
     margin-right:0.3rem;
     border-radius:0.1rem;
+    pointer-events: none;
     &.confirm{
       background-color:#eb4553;
       color:white;
+      pointer-events: auto;
     }
   }
 }

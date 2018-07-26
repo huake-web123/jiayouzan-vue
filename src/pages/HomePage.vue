@@ -78,10 +78,10 @@ export default {
       this.loadMoreGoodsData()
     },
     loadBannerData () {
-      return this.$ajax.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/banner')
+      return this.$ajax.get('https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/banner')
     },
     loadGoodsData () {
-      return this.$ajax.get('https://www.easy-mock.com/mock/5b2e1206d901cc25e7df4de5/jiayouzan/goods/' + this.page + '/6')
+      return this.$ajax.get('https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/goods/' + this.page + '/6')
     },
     loadData () {
       this.$ajax.all([this.loadGoodsData(), this.loadBannerData()])
