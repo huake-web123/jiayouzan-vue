@@ -3,7 +3,7 @@
     <div class="wrapper-box">
       <div class="header">订单信息:</div>
       <div class="main-box">
-        <div class="oil-type">{{gasModel}}</div>
+        <div class="oil-type">{{gasModel}}#</div>
         <div class="money">&yen;{{money}}</div>
       </div>
       <div class="discount-box" @click="selectCounpon()">
@@ -26,8 +26,8 @@
         </div>
         <div class="arrow"><img src="../assets/arrow.png"></div>
       </div>
-      <div class="pay-box">
-        <div class="payment" @click="toPay()">去支付&yen;{{money-discountMoney}}</div>
+      <div class="pay-box" @click="toPay()">
+        <div class="payment">去支付&yen;{{money-discountMoney}}</div>
         <div class="save">(已节省&yen;{{discountMoney}})</div>
       </div>
       <div class="coupon-box" v-if="isCounpon">
@@ -185,7 +185,7 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      this.gasModel = this.$route.params.gasModel + '#'
+      this.gasModel = this.$route.params.gasModel
       this.money = this.$route.params.money
       this.stationId = this.$route.params.id
       this.oilGun = this.$route.params.gas_gun
@@ -317,7 +317,8 @@ export default {
           invoice_id: this.invoiceId
         })
       }).then((res) => {
-        this.$router.push({path: '/orderDetails'})
+        let orderId = res.data.order_info.order_id
+        this.$router.push({path: '/orderdetails/' + orderId})
       })
     }
   }

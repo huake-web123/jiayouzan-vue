@@ -3,27 +3,27 @@
      <div class="head">订单详情</div>
      <div class="content">
          <div class="left-content">验证码：</div>
-         <div class="right-content">12</div>
+         <div class="right-content">{{orderArr.code}}</div>
      </div>
      <div class="content">
-         <div class="left-content">加油站名称</div>
-         <div class="right-content">加油站</div>
+         <div class="left-content">加油站名称：</div>
+         <div class="right-content">{{orderArr.station_name}}</div>
      </div>
      <div class="content">
          <div class="left-content">商品名称：</div>
-         <div class="right-content">2号枪</div>
+         <div class="right-content">{{orderArr.gas_gun}}号枪-{{orderArr.gas_no}}#，挂牌价：{{orderArr.price}}元</div>
      </div>
      <div class="content">
          <div class="left-content">实付金额：</div>
-         <div class="right-content">元</div>
+         <div class="right-content">{{orderArr.pay_amount}}元&nbsp;（节省{{orderArr.discount_amount}}元）</div>
      </div>
      <div class="content">
          <div class="left-content">发票抬头：</div>
-         <div class="right-content">哈哈哈</div>
+         <div class="right-content">{{orderArr.invoice_name}}</div>
      </div>
      <div class="content">
          <div class="left-content">统一社会信用码：</div>
-         <div class="right-content">1234</div>
+         <div class="right-content">{{orderArr.invoice_no}}</div>
      </div>
  </div>
 </template>
@@ -33,10 +33,27 @@ export default {
   name: '',
   data () {
     return {
-
+      stationName: '',
+      orderId: '',
+      orderArr: []
     }
   },
-  components: {
+  mounted () {
+    this.$nextTick(() => {
+      this.orderId = this.$route.params.id
+      this.getDetails()
+    })
+  },
+  methods: {
+      getDetails () {
+          this.$ajax({
+              method: 'get',
+              url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/order_detail/' + this.orderId
+          }).then((res) => {
+              this.orderArr = res.data.data
+              console.log(this.orderArr)
+          })
+      }
   }
 }
 </script>
@@ -63,6 +80,7 @@ export default {
         }
         .right-content{
             margin-right: 0.3rem;
+            color: #8A8A8A;
         }
     }
 }

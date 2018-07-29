@@ -58,8 +58,8 @@ export default new Router({
       component: Login
     },
     {
-      path: '/orderDetails',
-      name: 'orderDetails',
+      path: '/orderdetails/:id',
+      name: '123',
       component: detail
     }
   ]
