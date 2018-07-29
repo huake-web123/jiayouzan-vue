@@ -8,6 +8,7 @@ import jiaYou from '@/pages/jiayouliang'
 import order from '@/pages/Order'
 import orderList from '@/pages/orderList'
 import Login from '@/pages/login'
+import detail from '@/pages/orderDetails'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -42,7 +43,7 @@ export default new Router({
       component: jiaYou
     },
     {
-      path: '/Order/:gasModel/:money',
+      path: '/Order/:gasModel/:money/:id/:gas_gun',
       name: 'Order',
       component: order
     },
@@ -55,6 +56,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/orderDetails',
+      name: 'orderDetails',
+      component: detail
     }
   ]
 })

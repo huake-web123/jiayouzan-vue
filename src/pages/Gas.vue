@@ -180,18 +180,20 @@ export default {
       background-color: white;
       .station-name {
         color: #222222;
-        font-size: 0.38rem;
+        font-size: 0.34rem;
       }
       .station-location {
         color: #8A8A8A;
         margin-top: 0.1rem;
+        font-size: 0.28rem;
       }
       .station-distance {
         color: #8A8A8A;
+        font-size: 0.3rem;
       }
     }
     .midcontent {
-      height: 1.2rem;
+      height: 0.92rem;
       display: flex;
       justify-content: space-around;
       margin-top: 0.025rem;
@@ -200,13 +202,28 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        .pay{
+          font-size: 0.26rem;
+          margin-left: 0.1rem;
+        }
+        .pay-img{
+          >img{
+            width: 0.4rem;
+            height: 0.4rem;
+          }
+        }
       }
       .navigation-box {
         display: flex;
         justify-content: center;
         align-items: center;
+        .navigation{
+          font-size: 0.26rem;
+          margin-left: 0.1rem;
+        }
         img {
-          width: 0.64rem;
+          width: 0.4rem;
+          height: 0.4rem;
         }
       }
     }
@@ -214,30 +231,35 @@ export default {
       margin-top:0.25rem;
     }
     .load-more{
-      height: 1.8rem;
+      height: 1.44rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding-left: 0.25rem;
-      padding-right: 0.35rem;
+      padding-right: 0.42rem;
       background-color: white;
       margin-top: 0.025rem;
       .station-name {
         color: #222222;
-        font-size: 0.38rem;
+        font-size: 0.34rem;
       }
       .station-location {
         color: #8A8A8A;
-        margin-top: 0.1rem;
+        margin-top: 0.16rem;
+        font-size: 0.28rem;
       }
       .station-distance {
         color: #8A8A8A;
+        font-size: 0.26rem;
         /*width:0.8rem;*/
         /*overflow:hidden;*/
       }
       .station-img{
+        text-align: center;
+        margin-top: 0.16rem;
         img{
-          width:0.54rem;
+          width:0.32rem;
+          height: 0.32rem;
         }
       }
     }
@@ -246,8 +268,9 @@ export default {
       margin-top: 0.025rem;
       .drop-down {
         background-color: white;
-        height: 1rem;
-        line-height: 1rem;
+        height: 0.8rem;
+        line-height: 0.8rem;
+        font-size: 0.26rem;
       }
       .complete{
         background-color: white;
@@ -260,7 +283,8 @@ export default {
         display:flex;
         justify-content:center;
         img{
-          width:2rem;
+          width:1.9rem;
+          height: 0.32rem;
         }
       }
     }

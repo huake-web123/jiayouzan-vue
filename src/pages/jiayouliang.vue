@@ -18,7 +18,7 @@
       <!--ctrl+Y删除当前行，ctrl+F查找代码-->
       <div class="money-type" v-if="gasModel!==''&gasModel!=='油枪错误'">
         <!--关于数据当前index与数组里面所有数据index的匹配思想，如果不用index将会全部加上相同class-->
-        <div class="amount" v-for="(item, index) in moneyArr" :class='{selected:selectMoneyIndex == index}' @click="changeMoney(item, index)" >{{item}}元</div>
+        <div class="amount" v-for="(item, index) in moneyArr" :class='{selected:selectMoneyIndex == index}' @click="changeMoney(item, index)" v-bind:key=item.id>{{item}}元</div>
       </div>
       <div class="order" :class="{confirm:gasModel!==''&&money!==''}" @click="confirmOrder">确认订单</div>
     </div>
@@ -96,7 +96,7 @@ export default {
     },
     confirmOrder () {
       let getModel = this.gasModel.replace('#', '')
-      this.$router.push({path: '/Order' + '/' + getModel + '/' + this.money})
+      this.$router.push({path: '/Order' + '/' + getModel + '/' + this.money + '/' + this.stationId + '/' + this.oilGun})
     }
   }
 }

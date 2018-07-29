@@ -3,7 +3,7 @@
     <div class="wrapper-box">
       <div class="header">订单信息:</div>
       <div class="main-box">
-        <div class="oil-type">{{gasModel}}#</div>
+        <div class="oil-type">{{gasModel}}</div>
         <div class="money">&yen;{{money}}</div>
       </div>
       <div class="discount-box" @click="selectCounpon()">
@@ -27,7 +27,7 @@
         <div class="arrow"><img src="../assets/arrow.png"></div>
       </div>
       <div class="pay-box">
-        <div class="payment">去支付&yen;{{money-discountMoney}}</div>
+        <div class="payment" @click="toPay()">去支付&yen;{{money-discountMoney}}</div>
         <div class="save">(已节省&yen;{{discountMoney}})</div>
       </div>
       <div class="coupon-box" v-if="isCounpon">
@@ -126,6 +126,7 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie'
 export default {
   name: '',
   data () {
@@ -135,6 +136,7 @@ export default {
       invoice: false,
       addInvoiceHead: false,
       invoiceHead: '',
+      invoiceId: '',
       taxNumber: '',
       discount: '',
       couponsArr: [],
@@ -183,8 +185,10 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      this.gasModel = this.$route.params.gasModel
+      this.gasModel = this.$route.params.gasModel + '#'
       this.money = this.$route.params.money
+      this.stationId = this.$route.params.id
+      this.oilGun = this.$route.params.gas_gun
       this.getCoupons()
     })
   },
@@ -273,6 +277,7 @@ export default {
     getIndex (item, index) {
       this.invoiceIndex = index
       this.invoiceName = item.name
+      this.invoiceId = item.id
     },
     getCouponIndex (item, index) {
       let timeFlag = this.isInAvailableTime(item.start_time, item.end_time)
@@ -295,6 +300,25 @@ export default {
         return true
       }
       return false
+    },
+    toPay () {
+      this.$ajax({
+        method: 'post',
+        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/order',
+        data: JSON.stringify({
+          token: Cookies.get('token'),
+          amount: this.money,
+          discount_amount: this.discountMoney,
+          pay_amount: this.money - this.discountMoney,
+          station_id: this.stationId,
+          gas_gun: this.oilGun,
+          gas_no: this.gasModel,
+          coupon_id: this.discountCouponId,
+          invoice_id: this.invoiceId
+        })
+      }).then((res) => {
+        this.$router.push({path: '/orderDetails'})
+      })
     }
   }
 }
