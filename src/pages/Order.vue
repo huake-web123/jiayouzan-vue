@@ -752,7 +752,6 @@ export default {
                   color:#F99E47;
                   font-size:0.5rem;
                 }
-                .txt{}
                 .area{
                   margin-left: 0.2rem;
                   color:#F99E47;

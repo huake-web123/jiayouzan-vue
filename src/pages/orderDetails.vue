@@ -45,15 +45,15 @@ export default {
     })
   },
   methods: {
-      getDetails () {
-          this.$ajax({
-              method: 'get',
-              url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/order_detail/' + this.orderId
-          }).then((res) => {
-              this.orderArr = res.data.data
-              console.log(this.orderArr)
-          })
-      }
+    getDetails () {
+      this.$ajax({
+        method: 'get',
+        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/order_detail/' + this.orderId
+      }).then((res) => {
+        this.orderArr = res.data.data
+        console.log(this.orderArr)
+      })
+    }
   }
 }
 </script>

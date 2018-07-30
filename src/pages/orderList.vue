@@ -23,6 +23,7 @@
           <div class="pay-box">
             <span>实付：</span>
             <span class="money">&yen;{{item.amount}}</span>
+            <a :href="getHref(item.id)">查看详情</a>
           </div>
         </div>
       </div>
@@ -35,7 +36,8 @@ export default {
   data  () {
     return {
       page: 1,
-      orderArr: ''
+      orderArr: '',
+      orderId: ''
     }
   },
   mounted () {
@@ -53,11 +55,13 @@ export default {
           console.log(res[0].data.order_list)
           this.orderArr = res[0].data.order_list
         })
+    },
+    getHref (orderId) {
+      return '#/orderdetails/' + orderId
     }
   }
 }
 </script>
-
 <style lang="less" scoped>
   .wrapper-box{
     background-color: #F5F5F5;
@@ -134,6 +138,9 @@ export default {
           padding-right: 0.3rem;
           .money{
             color:#eb4652;
+          }
+          a{
+            float: right;
           }
         }
       }
