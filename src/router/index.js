@@ -9,6 +9,7 @@ import order from '@/pages/Order'
 import orderList from '@/pages/orderList'
 import Login from '@/pages/login'
 import detail from '@/pages/orderDetails'
+import LayoutMenu from '@/layout/layoutmenu'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -18,14 +19,43 @@ export default new Router({
       redirect: 'login'
     },
     {
-      path: '/HomePage',
-      name: 'Home',
-      component: Home
+      path: '/homepage',
+      name: 'home',
+      component: LayoutMenu,
+      redirect:'/homepage/index',
+      children:[
+        {
+          path: 'index',
+          name: 'home',
+          component: Home,
+        }
+      ]
     },
     {
-      path: '/Gas',
-      name: 'Gas',
-      component: Gas
+      path: '/gas',
+      name: 'gas',
+      component: LayoutMenu,
+      redirect:'/gas/index',
+      children:[
+        {
+          path: 'index',
+          name: 'gas',
+          component: Gas,
+        }
+      ]
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+      // redirect:'/login/index',
+      // children:[
+      //   {
+      //     path: 'index',
+      //     name: 'login',
+      //     component: Login
+      //   }
+      // ]
     },
     {
       path: '/CarService',
@@ -51,11 +81,6 @@ export default new Router({
       path: '/orderList',
       name: 'orderList',
       component: orderList
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
     },
     {
       path: '/orderdetails/:id',
