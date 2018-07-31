@@ -10,11 +10,11 @@
         <div class="gas-page"></div>
         <span>加油</span>
       </router-link>
-      <router-link  tag="a" to="/CarService" class="img-box" active-class="selected">
+      <router-link  tag="a" to="/orderList/index" class="img-box" active-class="selected">
         <div class="car-page"></div>
-        <span>汽车服务</span>
+        <span>订单</span>
       </router-link>
-      <router-link  tag="a" to="/Personal" class="img-box" active-class="selected">
+      <router-link  tag="a" to="/Personal/index" class="img-box" active-class="selected">
         <div class="personal-page"></div>
         <span>我</span>
       </router-link>

@@ -22,12 +22,12 @@ export default new Router({
       path: '/homepage',
       name: 'home',
       component: LayoutMenu,
-      redirect:'/homepage/index',
-      children:[
+      redirect: '/homepage/index',
+      children: [
         {
           path: 'index',
           name: 'home',
-          component: Home,
+          component: Home
         }
       ]
     },
@@ -35,12 +35,12 @@ export default new Router({
       path: '/gas',
       name: 'gas',
       component: LayoutMenu,
-      redirect:'/gas/index',
-      children:[
+      redirect: '/gas/index',
+      children: [
         {
           path: 'index',
           name: 'gas',
-          component: Gas,
+          component: Gas
         }
       ]
     },
@@ -48,14 +48,6 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
-      // redirect:'/login/index',
-      // children:[
-      //   {
-      //     path: 'index',
-      //     name: 'login',
-      //     component: Login
-      //   }
-      // ]
     },
     {
       path: '/CarService',
@@ -65,7 +57,15 @@ export default new Router({
     {
       path: '/Personal',
       name: 'Personal',
-      component: Personal
+      component: LayoutMenu,
+      redirect: '/Personal/index',
+      children: [
+        {
+          path: 'index',
+          name: 'Personal',
+          component: Personal
+        }
+      ]
     },
     {
       path: '/jiayouliang/:id',
@@ -80,7 +80,15 @@ export default new Router({
     {
       path: '/orderList',
       name: 'orderList',
-      component: orderList
+      component: LayoutMenu,
+      redirect: '/orderList/index',
+      children: [
+        {
+          path: 'index',
+          name: 'orderList',
+          component: orderList
+        }
+      ]
     },
     {
       path: '/orderdetails/:id',

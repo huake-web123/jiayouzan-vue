@@ -1,8 +1,8 @@
 <!--Created by hjx on 2018/6/21.-->
 <template>
   <div class="whole-box">
-    <div class="loading" v-if="isLoading">加载中......</div>
-    <div class="head-box" v-else>
+    <loading-box :loadStatus="showLoading"></loading-box>
+    <div class="head-box" v-if="pageLoaded">
       <swiper :options="swiperOptions" ref="mySwiper" class="swiper-box">
         <swiper-slide v-for="banner in banners" v-bind:key="banner.id">
           <img class="banner-bg" :src="banner.imgUrl">
@@ -45,6 +45,7 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import {swiper, swiperSlide} from 'vue-awesome-swiper'
+import loading23132 from '@/components/loading'
 export default {
   name: '',
   data () {
@@ -53,8 +54,9 @@ export default {
       goodsArr: [],
       loadArr: [],
       page: '1',
-      isLoading: true,
+      pageLoaded: false,
       allLoaded: false,
+      showLoading: true,
       swiperOptions: {
         autoplay: true,
         pagination: {
@@ -65,7 +67,8 @@ export default {
   },
   components: {
     'swiper': swiper,
-    'swiper-slide': swiperSlide
+    'swiper-slide': swiperSlide,
+    'loading-box': loading23132
   },
   mounted () {
     this.$nextTick(() => {
@@ -90,10 +93,12 @@ export default {
           let bannerData = res[1]
           this.banners = bannerData.data.data
           this.goodsArr = goodsData.data.data
-          this.isLoading = false
+          this.pageLoaded = true
+          this.showLoading = false
         })
     },
     loadMoreGoodsData () {
+      this.showLoading = true
       this.$ajax.all([this.loadGoodsData()])
         .then((res) => {
           let goodsData = res[0]
@@ -102,6 +107,7 @@ export default {
           } else {
             this.goodsArr.push(...goodsData.data.data)
           }
+          this.showLoading = false
         })
     }
     // loadData () {
@@ -134,11 +140,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .loading{
-    position:absolute;
-    top:50%;
-    left:50%
-  }
+.whole-box{
  .head-box{
     background-color:#F5F5F5;
   }
@@ -254,4 +256,5 @@ export default {
       }
     }
   }
+}
 </style>

@@ -1,6 +1,7 @@
 <!--Created by hjx on 2018/6/22.-->
 <template>
   <div class="wrapper-box">
+    <loading :loadStatus="showLoading"></loading>
     <swiper :options="swiperOptions" class="swiper-box">
       <swiper-slide v-for="item in banners" v-bind:key="item.id">
         <div class="img-box"><img :src="item.img_url"></div>
@@ -61,10 +62,12 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import {swiper, swiperSlide} from 'vue-awesome-swiper'
+import loading from '@/components/loading'
 export default {
   name: '',
   data () {
     return {
+      showLoading: true,
       banners: [],
       loadArr: [],
       stationName: '',
@@ -85,7 +88,8 @@ export default {
   },
   components: {
     'swiper': swiper,
-    'swiper-slide': swiperSlide
+    'swiper-slide': swiperSlide,
+    'loading': loading
   },
   filters: {
     distanceFilters: function (value) {
@@ -122,6 +126,7 @@ export default {
         .then((res) => {
           this.banners = res[0].data.data
           this.nearbyStation = res[1].data.data
+          this.showLoading = false
         })
     },
     loadMoreStationData () {
