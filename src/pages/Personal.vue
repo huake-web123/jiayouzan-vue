@@ -1,6 +1,7 @@
 <!--Created by hjx on 2018/6/22.-->
 <template>
     <div class="wrapper-box">
+      <loading :loadStatus="showLoading"></loading>
       <div class="header-box">
         <div class="personal-box">笑笑</div>
         <div class="total">
@@ -85,15 +86,21 @@
 </template>
 
 <script>
+import loading from '@/components/loading'
 export default {
   name: '',
   data () {
     return {
+      showLoading: true
     }
   },
   mounted () {
     this.$nextTick(() => {
+      this.showLoading = false
     })
+  },
+  components: {
+    'loading': loading
   },
   methods: {
     openOrderList () {

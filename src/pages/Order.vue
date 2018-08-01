@@ -68,8 +68,8 @@
           <div class="head-type">
             <div>抬头类型</div>
             <div class="select">
-              <div>个人</div>
-              <div class="selected">单位</div>
+              <div @click="getType1()" :class="{selected:headType == 1}">个人</div>
+              <div @click="getType2()" :class="{selected:headType == 2}">单位</div>
             </div>
           </div>
           <div class="head-box">
@@ -89,8 +89,8 @@
             <div class="img-box" @click="closeInvoice()"><img src="../assets/ios-close-outline.png"></div>
           </div>
           <div class="scroll">
-            <div class="invoiceInfo" v-for="(item,index) in invoiceArr" v-bind:key="item.id" v-on:click="getIndex(item,index)">
-              <div class="left">
+            <div class="invoiceInfo" v-for="(item,index) in invoiceArr" v-bind:key="item.id">
+              <div class="left"  v-on:click="getIndex(item,index)">
                 <div class="img-box" :class='{selected:invoiceIndex == index}'></div>
                 <div>
                   <div>{{item.name}}</div>
@@ -98,13 +98,13 @@
                 </div>
               </div>
               <div class="right" v-if="item.id !== 0">
-                <div class="default-box">
-                  <div class="img-box" :class='{selected:invoiceIndex == index}'></div>
+                <div class="default-box" @click="changeDefault(item,index)">
+                  <div class="img-box" :class='{selected:item.is_default}'></div>
                   <div class="txt">默认使用</div>
                 </div>
                 <div class="modify">
                   <div class="edit">编辑</div>
-                  <div class="delete">删除</div>
+                  <div class="delete" @click="deleteItem(index)">删除</div>
                 </div>
               </div>
             </div>
@@ -116,7 +116,7 @@
           <div class="footer">
             <div class="invoice" @click="addHead()">
               <div class="img-box"><img src="../assets/add_invoice.png"></div>
-              <div>添加发票抬头</div>
+              <div class="add-txt">添加发票抬头</div>
             </div>
           </div>
 
@@ -141,6 +141,7 @@ export default {
       discount: '',
       couponsArr: [],
       invoiceArr: [],
+      headType: 2,
       coupon: '',
       couponIndex: -1,
       isCounpon: false,
@@ -274,10 +275,26 @@ export default {
     addHead () {
       this.addInvoiceHead = true
     },
+    getType1 () {
+      this.headType = 1
+    },
+    getType2 () {
+      this.headType = 2
+    },
     getIndex (item, index) {
       this.invoiceIndex = index
       this.invoiceName = item.name
       this.invoiceId = item.id
+    },
+    changeDefault (item, index) {
+      for (let i = 0; i < this.invoiceArr.length; i++) {
+        this.invoiceArr[i].is_default = false
+      }
+      item.is_default = true
+    },
+    deleteItem (index) {
+      this.invoiceArr.splice(index, 1)
+      alert('删除成功')
     },
     getCouponIndex (item, index) {
       let timeFlag = this.isInAvailableTime(item.start_time, item.end_time)
@@ -680,7 +697,12 @@ export default {
             display:flex;
             justify-content: center;
             align-items: center;
+            .add-txt{
+              color:white;
+              margin-left:0.18rem;
+            }
             .img-box{
+              height:0.42rem;
               >img{
                 height:0.42rem;
               }

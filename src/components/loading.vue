@@ -10,9 +10,9 @@ export default {
   name: '',
   props: ['loadStatus'],
   data () {
-   return {
+    return {
 
-   }
+    }
   },
   components: {
 
