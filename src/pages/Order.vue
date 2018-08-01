@@ -10,7 +10,7 @@
         <div class="discount">优惠券</div>
         <div class="discount-txt">&yen;{{discountMoney}}</div>
       </div>
-      <div class="bill-box" @click="addInvoice">
+      <div class="bill-box" @click="addInvoice()">
         <div class="bill-title">发票抬头</div>
         <div class="img-box">
           <div class="bill-txt">{{invoiceName}}</div>
@@ -62,6 +62,7 @@
       <div class="modal-box" v-if="invoice">
         <div class="message-box" v-if="addInvoiceHead">
           <div class="add-bill">
+            <!-- <div v-if="editHead">编辑发票抬头</div> -->
             <div>添加发票抬头</div>
             <div class="img-box" @click="closeHead()"><img src="../assets/ios-close-outline.png"></div>
           </div>
@@ -80,10 +81,34 @@
             <div class="tax-txt">税号</div>
             <input v-model="taxNumber">
           </div>
-          <div class="save" :class="{preserve:invoiceHead!==''&&taxNumber!==''}">保存</div>
+          <div class="save" :class="{preserve:invoiceHead!==''&&taxNumber!==''}" @click="saveInvoice()">保存</div>
           <div class="close" @click="closeHead">关闭</div>
         </div>
-        <div class="invoice-box" v-if="!addInvoiceHead">
+        <div class="message-box" v-if="editHead">
+          <div class="add-bill">
+            <!-- <div v-if="editHead">编辑发票抬头</div> -->
+            <div>编辑发票抬头</div>
+            <div class="img-box" @click="closeHead()"><img src="../assets/ios-close-outline.png"></div>
+          </div>
+          <div class="head-type">
+            <div>抬头类型</div>
+            <div class="select">
+              <div @click="getType1()" :class="{selected:invoiceType == 1}">个人</div>
+              <div @click="getType2()" :class="{selected:invoiceType == 2}">单位</div>
+            </div>
+          </div>
+          <div class="head-box">
+            <div class="head-txt">发票抬头</div>
+            <input v-model="invoiceHeadEdit">
+          </div>
+          <div class="tax-box">
+            <div class="tax-txt">税号</div>
+            <input v-model="taxNumberEdit">
+          </div>
+          <div class="save" :class="{preserve:invoiceHead!==''&&taxNumber!==''}" @click="editInvoice()">保存</div>
+          <div class="close" @click="closeHead">关闭</div>
+        </div>
+        <div class="invoice-box" v-if="invoiceList">
           <div class="select-head">
             <div>请选择发票抬头</div>
             <div class="img-box" @click="closeInvoice()"><img src="../assets/ios-close-outline.png"></div>
@@ -103,7 +128,7 @@
                   <div class="txt">默认使用</div>
                 </div>
                 <div class="modify">
-                  <div class="edit">编辑</div>
+                  <div class="edit" @click="editItem(item ,index)">编辑</div>
                   <div class="delete" @click="deleteItem(index)">删除</div>
                 </div>
               </div>
@@ -148,7 +173,11 @@ export default {
       discountMoney: 0,
       discountCouponId: 0,
       invoiceIndex: 0,
-      invoiceName: ''
+      invoiceName: '',
+      editHead: false,
+      invoiceList: true,
+      invoiceIdEdit: '',
+      isDefault: ''
       // time: ''
     }
   },
@@ -202,6 +231,12 @@ export default {
     },
     closeHead () {
       this.addInvoiceHead = false
+      this.invoiceList = true
+      this.editHead = false
+    },
+    addHead () {
+      this.addInvoiceHead = true
+      this.invoiceList = false
     },
     selectCounpon () {
       this.isCounpon = true
@@ -272,9 +307,6 @@ export default {
         this.discountMoney = '暂无可用红包'
       }
     },
-    addHead () {
-      this.addInvoiceHead = true
-    },
     getType1 () {
       this.headType = 1
     },
@@ -292,9 +324,57 @@ export default {
       }
       item.is_default = true
     },
+    editItem (item, index) {
+      this.addHead()
+      this.invoiceType = item.type
+      this.invoiceHeadEdit = item.name
+      this.taxNumberEdit = item.invoice_no
+      this.invoiceIdEdit = item.id
+      this.isDefault = item.is_default
+      this.editHead = true
+      this.invoiceList = false
+      this.addInvoiceHead = false
+    },
     deleteItem (index) {
       this.invoiceArr.splice(index, 1)
       alert('删除成功')
+    },
+    saveInvoice () {
+      this.$ajax({
+        method: 'post',
+        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/invoice/add',
+        data: JSON.stringify({
+          token: Cookies.get('token'),
+          invoice_type: this.headType,
+          invoice_name: this.invoiceHead,
+          invoice_tax_no: this.taxNumber
+        })
+      }).then((res) => {
+        console.log(res.data.data.id)
+        if (res.data.data.id) {
+          // unshift可以将数据加到数组第一项
+          this.invoiceArr.unshift({
+            id: res.data.data.id,
+            type: this.headType,
+            name: this.invoiceHead,
+            invoice_no: this.taxNumber,
+            is_default: false
+          })
+        }
+      })
+    },
+    editInvoice () {
+      this.$ajax({
+        method: 'post',
+        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/invoice/edit/1',
+        data: JSON.stringify({
+          token: Cookies.get('token'),
+          invoice_type: this.invoiceType,
+          invoice_name: this.invoiceHeadEdit,
+          invoice_tax_no: this.taxNumber
+        })
+      }).then((res) => {
+      })
     },
     getCouponIndex (item, index) {
       let timeFlag = this.isInAvailableTime(item.start_time, item.end_time)
