@@ -9,6 +9,7 @@ import order from '@/pages/Order'
 import orderList from '@/pages/orderList'
 import Login from '@/pages/login'
 import detail from '@/pages/orderDetails'
+import mobile from '@/pages/mobilephone'
 import LayoutMenu from '@/layout/layoutmenu'
 Vue.use(Router)
 export default new Router({
@@ -94,6 +95,11 @@ export default new Router({
       path: '/orderdetails/:id',
       name: '123',
       component: detail
+    },
+    {
+      path: '/mobilephone',
+      name: 'mobilephone',
+      component: mobile
     }
   ]
 })

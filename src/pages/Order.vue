@@ -93,8 +93,8 @@
           <div class="head-type">
             <div>抬头类型</div>
             <div class="select">
-              <div @click="getType1()" :class="{selected:invoiceType == 1}">个人</div>
-              <div @click="getType2()" :class="{selected:invoiceType == 2}">单位</div>
+              <div @click="getInvoiceType1()" :class="{selected:invoiceType == 1}">个人</div>
+              <div @click="getInvoiceType2()" :class="{selected:invoiceType == 2}">单位</div>
             </div>
           </div>
           <div class="head-box">
@@ -177,7 +177,9 @@ export default {
       editHead: false,
       invoiceList: true,
       invoiceIdEdit: '',
-      isDefault: ''
+      isDefault: '',
+      invoiceType: '',
+      currentIndex: ''
       // time: ''
     }
   },
@@ -313,6 +315,12 @@ export default {
     getType2 () {
       this.headType = 2
     },
+    getInvoiceType1 () {
+      this.invoiceType = 1
+    },
+    getInvoiceType2 () {
+      this.invoiceType = 2
+    },
     getIndex (item, index) {
       this.invoiceIndex = index
       this.invoiceName = item.name
@@ -331,6 +339,7 @@ export default {
       this.taxNumberEdit = item.invoice_no
       this.invoiceIdEdit = item.id
       this.isDefault = item.is_default
+      this.currentIndex = index
       this.editHead = true
       this.invoiceList = false
       this.addInvoiceHead = false
@@ -366,14 +375,23 @@ export default {
     editInvoice () {
       this.$ajax({
         method: 'post',
-        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/invoice/edit/1',
+        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/invoice/edit/' + this.invoiceIdEdit,
         data: JSON.stringify({
           token: Cookies.get('token'),
           invoice_type: this.invoiceType,
           invoice_name: this.invoiceHeadEdit,
-          invoice_tax_no: this.taxNumber
+          invoice_tax_no: this.taxNumber,
+          invoice_id: this.invoiceIdEdit,
+          is_default: this.isDefault
         })
       }).then((res) => {
+        console.log(res.data.data.msg)
+        // 后台改数据和前端显示无关，前端必须自己修改数组
+        this.invoiceArr[this.currentIndex].type = this.invoiceType
+        this.invoiceArr[this.currentIndex].name = this.invoiceHeadEdit
+        this.invoiceArr[this.currentIndex].invoice_no = this.taxNumberEdit
+        this.invoiceArr[this.currentIndex].is_default = this.isDefault
+        this.invoiceArr[this.currentIndex].type = this.invoiceType
       })
     },
     getCouponIndex (item, index) {

@@ -3,18 +3,22 @@
     <div class="wrapper-box">
       <loading :loadStatus="showLoading"></loading>
       <div class="header-box">
-        <div class="personal-box">笑笑</div>
+        <div class="personal-box">
+          <img :src='personalArr.avatar'>
+          <span>{{personalArr.name}}</span>
+          <img src='../assets/arrow@white.png'>
+        </div>
         <div class="total">
           <div class="fuel-box add-box">
-            <div>0&nbsp;L</div>
+            <div>{{personalArr.total_oil}}&nbsp;L</div>
             <div class="add-txt">累计加油量</div>
           </div>
           <div class="consume-box add-box">
-            <div>&yen;&nbsp;0</div>
+            <div>&yen;&nbsp;{{personalArr.total_amount}}</div>
             <div class="add-txt">累计消费金额</div>
           </div>
           <div class="save-box">
-            <div>&yen;&nbsp;0</div>
+            <div>&yen;&nbsp;{{personalArr.total_save}}</div>
             <div class="add-txt">累计节省金额</div>
           </div>
         </div>
@@ -91,12 +95,13 @@ export default {
   name: '',
   data () {
     return {
-      showLoading: true
+      showLoading: true,
+      personalArr: []
     }
   },
   mounted () {
     this.$nextTick(() => {
-      this.showLoading = false
+      this.loadPersonData()
     })
   },
   components: {
@@ -105,6 +110,16 @@ export default {
   methods: {
     openOrderList () {
       this.$router.push({path: '/orderList'})
+    },
+    loadPersonData () {
+      this.$ajax({
+        method: 'post',
+        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/user_info'
+      }).then((res) => {
+        console.log(res.data.user_info)
+        this.personalArr = res.data.user_info
+        this.showLoading = false
+      })
     }
   }
 }
@@ -122,6 +137,16 @@ export default {
     .personal-box{
       height:1.5rem;
       line-height:1.5rem;
+      display: flex;
+      align-items: center;
+      img{
+        border-radius: 0.45rem;
+        height: 0.9rem;
+        margin-left: 0.4rem;
+      }
+      span{
+        margin-left:0.32rem;
+      }
     }
     .total{
       display:flex;
