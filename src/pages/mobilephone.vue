@@ -5,17 +5,18 @@
             <img src="../assets/mobile3.png">
             <input type="number" pattern="[0-9]*" v-model="phoneNumber" placeholder="请输入手机号">
          </div>
-         <div class='verification-code' :class="{selected:flag}">获取验证码</div>
+         <div class='verification-code' :class="{selected:flag}" @click="getVerificationCode()">获取验证码</div>
      </div>
      <div class="code-box">
          <img src="../assets/lock1.png">
          <input type="number" pattern="[0-9]*" v-model="verificationCode" placeholder="输入验证码" :disabled="!flag">
      </div>
-     <div class="save-box" :class="{selected:flag && codeFlag}">保存</div>
+     <div class="save-box" :class="{selected:flag && codeFlag}" @click="saveMobileNum()">保存</div>
  </div>
 </template>
 
 <script type="text/ecmascript-6">
+import Cookies from 'js-cookie'
 export default {
   name: '',
   data () {
@@ -42,6 +43,39 @@ export default {
       //   <!-- 判断六位数字 -->
       var reg = /^[0-9]{6}$/
       this.codeFlag = reg.test(newValue)
+    }
+  },
+  methods: {
+    getVerificationCode () {
+      this.$ajax({
+        method: 'post',
+        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/msg_code'
+      }).then((res) => {
+        console.log(res.data.data.status)
+        if (res.data.data.status) {
+          alert('获取验证码成功！')
+        } else {
+          alert('获取验证码失败!')
+        }
+      })
+    },
+    saveMobileNum () {
+      this.$ajax({
+        method: 'post',
+        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/bind_mobile',
+        data: JSON.stringify({
+          token: Cookies.get('token'),
+          mobile: this.phoneNumber,
+          code: this.verificationCode
+        })
+      }).then((res) => {
+        console.log(res.data.data.status)
+        if (res.data.data.status) {
+          alert('绑定成功！')
+        } else {
+          alert('绑定失败！')
+        }
+      })
     }
   }
 }

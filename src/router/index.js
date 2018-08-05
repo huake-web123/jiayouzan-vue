@@ -10,6 +10,7 @@ import orderList from '@/pages/orderList'
 import Login from '@/pages/login'
 import detail from '@/pages/orderDetails'
 import mobile from '@/pages/mobilephone'
+import data from '@/pages/mydata'
 import LayoutMenu from '@/layout/layoutmenu'
 Vue.use(Router)
 export default new Router({
@@ -100,6 +101,11 @@ export default new Router({
       path: '/mobilephone',
       name: 'mobilephone',
       component: mobile
+    },
+    {
+      path: '/mydata',
+      name: 'mydata',
+      component: data
     }
   ]
 })

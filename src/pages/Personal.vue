@@ -3,9 +3,11 @@
     <div class="wrapper-box">
       <loading :loadStatus="showLoading"></loading>
       <div class="header-box">
-        <div class="personal-box">
-          <img :src='personalArr.avatar'>
-          <span>{{personalArr.name}}</span>
+        <div class="personal-box" @click="toMyData()">
+          <div class="personal-img">
+            <img :src='personalArr.avatar'>
+            <span>{{personalArr.name}}</span>
+          </div>
           <img src='../assets/arrow@white.png'>
         </div>
         <div class="total">
@@ -75,7 +77,7 @@
         </div>
         <div class="arrow"><img src="../assets/arrow.png"></div>
       </div>
-      <div class="bind-cellphone menu">
+      <div class="bind-cellphone menu" @click="bindCellPhoneNum()">
         <div class="img-box">
           <div class="img"><img src="../assets/bindmobile.png"></div>
           <div class="img-txt">绑定手机号</div>
@@ -111,6 +113,12 @@ export default {
     openOrderList () {
       this.$router.push({path: '/orderList'})
     },
+    bindCellPhoneNum () {
+      this.$router.push({path: '/mobilephone'})
+    },
+    toMyData () {
+      this.$router.push({path: '/mydata'})
+    },
     loadPersonData () {
       this.$ajax({
         method: 'post',
@@ -138,14 +146,23 @@ export default {
       height:1.5rem;
       line-height:1.5rem;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      img{
+      .personal-img{
+        display: flex;
+        align-items: center;
+        img{
         border-radius: 0.45rem;
         height: 0.9rem;
         margin-left: 0.4rem;
-      }
-      span{
+        }
+        span{
         margin-left:0.32rem;
+        }
+      }
+      >img{
+        height: 0.5rem;
+        margin-right: 0.5rem;
       }
     }
     .total{
