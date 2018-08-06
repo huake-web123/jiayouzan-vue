@@ -25,14 +25,20 @@
          </div>
          <div class="content-box">
              <div class="txt">性别</div>
-             <div class="img-box">
-              <div class="sex">女</div>
+             <div class="img-box" @click="changeSex()">
+              <div class="sex">{{personalArr.gender | genderFilters}}</div>
               <img class="arrow" src="../assets/arrow.png">
              </div>
          </div>
+         <div class="select-box" v-if=selectSex>
+           <div class="sex-box">
+             <div @click="getMaleSex()">男</div>
+             <div @click="getFemaleSex()">女</div>
+           </div>
+         </div>
          <select>
-                <option value="男">男</option>
-                <option value="女">女</option>
+            <option>男</option>
+            <option>女</option>
          </select>
      </div>
  </div>
@@ -46,34 +52,25 @@ export default {
     return {
       personalArr: [],
       nickName: '',
-      imgUrl: ''
+      imgUrl: '',
+      sexuality: '',
+      sex: true,
+      selectSex: false
     }
   },
-  components: {
-
-  },
-  // watch: {
-  //   nickName (newValue, oldValue) {
-  //     this.$ajax({
-  //       method: 'post',
-  //       url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/updtae_userinfo',
-  //       data: JSON.stringify({
-  //         token: Cookies.get('token'),
-  //         filed: 'name',
-  //         value: newValue
-  //       })
-  //     }).then((res) => {
-  //       console.log(res.data.data.msg)
-  //       alert('名字修改成功！')
-  //     })
-  //   }
-  // },
   filters: {
     mobileFilters (value) {
       if (value === '') {
         return '未删减'
       } else {
         return value
+      }
+    },
+    genderFilters (gender) {
+      if (gender === 0) {
+        return '男'
+      } else {
+        return '女'
       }
     }
   },
@@ -120,38 +117,42 @@ export default {
           }).then((res) => {
             console.log(res.data.img_url)
             that.imgUrl = res.data.img_url
-            alert('图片上传成功！')
-            that.$ajax({
-              method: 'post',
-              url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/updtae_userinfo',
-              data: JSON.stringify({
-                token: Cookies.get('token'),
-                filed: 'avatar',
-                value: that.imgUrl
-              })
-            }).then((res) => {
-              console.log(res.data.data.msg)
-              alert('头像修改成功!')
-            })
+            that.updateUserInfo('avatar', that.imgUrl)
           })
         }
       }
     },
     // 用input的onchange事件，这样当光标移走才触发修改名字事件
     changeName () {
+      this.updateUserInfo('name', this.nickName)
+    },
+    updateUserInfo (key, val) {
       // this.nickName = document.getElementById(x).value
       this.$ajax({
         method: 'post',
         url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/updtae_userinfo',
         data: JSON.stringify({
           token: Cookies.get('token'),
-          filed: 'name',
-          value: this.nickName
+          filed: key,
+          value: val
         })
       }).then((res) => {
         console.log(res.data.data.msg)
-        alert('名字修改成功！')
+        alert('修改成功！')
       })
+    },
+    getMaleSex () {
+      this.sex = true
+      this.personalArr.gender = 0
+      this.selectSex = false
+    },
+    getFemaleSex () {
+      this.sex = false
+      this.personalArr.gender = 1
+      this.selectSex = false
+    },
+    changeSex () {
+      this.selectSex = true
     }
   }
 }
@@ -165,6 +166,32 @@ export default {
     overflow: hidden;
     .main-content{
         margin-top:0.2rem;
+        .select-box{
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          background-color:rgba(0,0,0,.4);
+          z-index: 99;
+          .sex-box{
+            height:3rem;
+            width: 5.8rem;
+            text-align: center;
+            border-radius: 0.1rem;
+            font-size: 0.28rem;
+            background-color:white;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            >div{
+              width: 1rem;
+              height: 0.6rem;
+              border:1px solid rgba(0,0,0,.5);
+            }
+          }
+        }
         .content-box{
             height: 0.88rem;
             border-bottom: 0.02rem solid #dfdfdf;
