@@ -252,9 +252,9 @@ export default {
     getCoupons () {
       this.$ajax.all([this.getCouponsData()])
         .then((res) => {
-          console.log(this)
+          // console.log(this)
           this.couponsArr = res[0].data.coupon
-          console.log('this.couponsArr', this.couponsArr)
+          // console.log('this.couponsArr', this.couponsArr)
           this.invoiceArr = res[0].data.invoice
           this.invoiceName = this.invoiceArr[0].name
           this.invoiceArr.push({'id': 0, 'name': '不开发票', 'invoice_no': ''})

@@ -124,7 +124,6 @@ export default {
         method: 'post',
         url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/user_info'
       }).then((res) => {
-        console.log(res.data.user_info)
         this.personalArr = res.data.user_info
         this.showLoading = false
       })

@@ -20,7 +20,8 @@
          </div>
          <div class="content-box my-name">
              <div class="txt">昵称</div>
-             <div class="name">{{personalArr.name}}</div>
+             <input type="text" class="name" v-model="nickName" @change="changeName">
+             <!-- <div class="name">{{personalArr.name}}</div> -->
          </div>
          <div class="content-box">
              <div class="txt">性别</div>
@@ -43,12 +44,30 @@ export default {
   name: '',
   data () {
     return {
-      personalArr: []
+      personalArr: [],
+      nickName: '',
+      imgUrl: ''
     }
   },
   components: {
 
   },
+  // watch: {
+  //   nickName (newValue, oldValue) {
+  //     this.$ajax({
+  //       method: 'post',
+  //       url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/updtae_userinfo',
+  //       data: JSON.stringify({
+  //         token: Cookies.get('token'),
+  //         filed: 'name',
+  //         value: newValue
+  //       })
+  //     }).then((res) => {
+  //       console.log(res.data.data.msg)
+  //       alert('名字修改成功！')
+  //     })
+  //   }
+  // },
   filters: {
     mobileFilters (value) {
       if (value === '') {
@@ -69,8 +88,8 @@ export default {
         method: 'post',
         url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/user_info'
       }).then((res) => {
-        // console.log(res.data.user_info)
         this.personalArr = res.data.user_info
+        this.nickName = this.personalArr.name
         this.showLoading = false
       })
     },
@@ -85,9 +104,9 @@ export default {
         alert('请上传大小不要超过200KB的图片')
       } else {
         var reader = new FileReader()
-        reader.readAsDataURL(file) 
+        reader.readAsDataURL(file)
         reader.onloadend = function () {
-          console.log('123')
+          // console.log('123')
           var dataURL = reader.result
           that.personalArr.avatar = dataURL
           document.getElementById('form-avatar').reset()
@@ -100,14 +119,39 @@ export default {
             })
           }).then((res) => {
             console.log(res.data.img_url)
+            that.imgUrl = res.data.img_url
             alert('图片上传成功！')
+            that.$ajax({
+              method: 'post',
+              url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/updtae_userinfo',
+              data: JSON.stringify({
+                token: Cookies.get('token'),
+                filed: 'avatar',
+                value: that.imgUrl
+              })
+            }).then((res) => {
+              console.log(res.data.data.msg)
+              alert('头像修改成功!')
+            })
           })
         }
-        // reader.onerror = function (err) {
-        //   console.log(err)
-        //   document.getElementById('form-avatar').reset()
-        // }
       }
+    },
+    // 用input的onchange事件，这样当光标移走才触发修改名字事件
+    changeName () {
+      // this.nickName = document.getElementById(x).value
+      this.$ajax({
+        method: 'post',
+        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/updtae_userinfo',
+        data: JSON.stringify({
+          token: Cookies.get('token'),
+          filed: 'name',
+          value: this.nickName
+        })
+      }).then((res) => {
+        console.log(res.data.data.msg)
+        alert('名字修改成功！')
+      })
     }
   }
 }
@@ -130,12 +174,21 @@ export default {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            &.my-name{
+              >input{
+                font-size: 0.32rem;
+                width: 1.1rem;
+                text-align: right;
+              }
+            }
             .txt{
                 color:#383838;
             }
             .name{
-                    color:#848484;
-                    margin-right: 0.6rem;
+                  color:#848484;
+                  margin-right: 0.6rem;
+                  border:none;
+                  outline: none;
                 }
             .img-box{
                 display: flex;
@@ -148,7 +201,7 @@ export default {
                   z-index:999;
                   >input{
                     // 透明度为0
-                    // opacity:0;
+                    opacity:0;
                   }
                 }
                 .bind{

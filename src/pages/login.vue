@@ -39,7 +39,7 @@ export default {
   methods: {
     isJump () {
       if (Cookies.get('token') !== undefined) {
-        console.log(Cookies.get('token'))
+        // console.log(Cookies.get('token'))
         this.$router.push({path: '/HomePage'})
       } else {
       }
@@ -53,7 +53,7 @@ export default {
           password: this.passWord
         })
       }).then((res) => {
-        console.log(res.data.token)
+        // console.log(res.data.token)
         Cookies.set('token', res.data.token, { expires: 7, path: '' })
         this.success = true
         setTimeout(() => {

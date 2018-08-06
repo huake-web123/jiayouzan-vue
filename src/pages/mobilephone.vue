@@ -51,7 +51,7 @@ export default {
         method: 'post',
         url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/msg_code'
       }).then((res) => {
-        console.log(res.data.data.status)
+        // console.log(res.data.data.status)
         if (res.data.data.status) {
           alert('获取验证码成功！')
         } else {

@@ -52,7 +52,7 @@ export default {
     loadOrderData () {
       this.$ajax.all([this.loadOrder()])
         .then((res) => {
-          console.log(res[0].data.order_list)
+          // console.log(res[0].data.order_list)
           this.orderArr = res[0].data.order_list
         })
     },
