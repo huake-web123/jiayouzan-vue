@@ -32,13 +32,19 @@
          </div>
          <div class="select-box" v-if=selectSex>
            <div class="sex-box">
-             <div @click="getMaleSex()">男</div>
-             <div @click="getFemaleSex()">女</div>
+             <div @click="getMaleSex()">
+               <div class="img-box" :class="{selected:personalArr.gender === 0}"></div>
+               <div class="sex">男</div>
+             </div>
+             <div class="female" @click="getFemaleSex()">
+               <div class="img-box" :class="{selected:personalArr.gender === 1}"></div>
+               <div class="sex">女</div>
+             </div>
            </div>
          </div>
          <select>
-            <option>男</option>
-            <option>女</option>
+           <option>男</option>
+           <option>女</option>
          </select>
      </div>
  </div>
@@ -142,12 +148,12 @@ export default {
       })
     },
     getMaleSex () {
-      this.sex = true
+      // this.sex = true
       this.personalArr.gender = 0
       this.selectSex = false
     },
     getFemaleSex () {
-      this.sex = false
+      // this.sex = false
       this.personalArr.gender = 1
       this.selectSex = false
     },
@@ -176,7 +182,7 @@ export default {
           z-index: 99;
           .sex-box{
             height:3rem;
-            width: 5.8rem;
+            width: 5.5rem;
             text-align: center;
             border-radius: 0.1rem;
             font-size: 0.28rem;
@@ -185,10 +191,28 @@ export default {
             transform: translate(-50%, -50%);
             top: 50%;
             left: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             >div{
-              width: 1rem;
-              height: 0.6rem;
-              border:1px solid rgba(0,0,0,.5);
+              display: flex;
+              margin-left: 0.5rem;
+              align-items: center;
+              &.female{
+                margin-top:0.5rem;
+              }
+              .img-box{
+                width: 0.5rem;
+                height: 0.5rem;
+                background-image: url('../assets/no-select.png');
+                background-size: 0.5rem;
+                margin-right: 0.2rem;
+                &.selected{
+                  background-image: url('../assets/select-sex.png');
+                }
+              }
+              .sex{
+              }
             }
           }
         }

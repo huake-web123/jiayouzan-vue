@@ -5,11 +5,12 @@
             <img src="../assets/mobile3.png">
             <input type="number" pattern="[0-9]*" v-model="phoneNumber" placeholder="请输入手机号">
          </div>
-         <div class='verification-code' :class="{selected:flag}" @click="getVerificationCode()">获取验证码</div>
+         <div v-show="codeShow" class='verification-code' :class="{selected:flag}" @click="getVerificationCode()">获取验证码</div>
+         <div v-show="!codeShow" class='verification-code'>{{count}}s</div>
      </div>
      <div class="code-box">
          <img src="../assets/lock1.png">
-         <input type="number" pattern="[0-9]*" v-model="verificationCode" placeholder="输入验证码" :disabled="!flag">
+         <input type="number" pattern="[0-9]*" v-model="verificationCode" placeholder="输入6位验证码" :disabled="!flag">
      </div>
      <div class="save-box" :class="{selected:flag && codeFlag}" @click="saveMobileNum()">保存</div>
  </div>
@@ -24,7 +25,10 @@ export default {
       flag: '',
       codeFlag: '',
       phoneNumber: '',
-      verificationCode: ''
+      verificationCode: '',
+      count: '',
+      codeShow: true,
+      timer: null
     }
   },
   components: {
@@ -58,6 +62,20 @@ export default {
           alert('获取验证码失败!')
         }
       })
+      const TIME_COUNT = 59
+      if (!this.timer) {
+        this.count = TIME_COUNT
+        this.codeShow = false
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= TIME_COUNT) {
+            this.count--
+          } else {
+            this.codeShow = true
+            clearInterval(this.timer)
+            this.timer = null
+          }
+        }, 1000)
+      }
     },
     saveMobileNum () {
       this.$ajax({
