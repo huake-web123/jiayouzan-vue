@@ -66,6 +66,7 @@ export default {
       if (!this.timer) {
         this.count = TIME_COUNT
         this.codeShow = false
+        // setInterval() 方法可按照指定的周期（以毫秒计）来调用函数或计算表达式。
         this.timer = setInterval(() => {
           if (this.count > 0 && this.count <= TIME_COUNT) {
             this.count--

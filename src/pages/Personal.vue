@@ -168,6 +168,7 @@ export default {
       display:flex;
       justify-content:space-around;
       height:0.85rem;
+      color: white;
       >div{
         display:flex;
         flex-direction: column;

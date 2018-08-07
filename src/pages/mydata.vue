@@ -30,22 +30,20 @@
               <img class="arrow" src="../assets/arrow.png">
              </div>
          </div>
-         <div class="select-box" v-if=selectSex>
-           <div class="sex-box">
-             <div @click="getMaleSex()">
-               <div class="img-box" :class="{selected:personalArr.gender === 0}"></div>
-               <div class="sex">男</div>
-             </div>
-             <div class="female" @click="getFemaleSex()">
-               <div class="img-box" :class="{selected:personalArr.gender === 1}"></div>
-               <div class="sex">女</div>
-             </div>
-           </div>
-         </div>
-         <select>
-           <option>男</option>
-           <option>女</option>
-         </select>
+         <transition name="slide-fade">
+          <div class="select-box" v-show="selectSex">
+            <div class="sex-box">
+              <div @click="getSex(0)">
+                <div class="img-box" :class="{selected:personalArr.gender === 0}"></div>
+                <div class="sex">男</div>
+              </div>
+              <div class="female" @click="getSex(1)">
+                <div class="img-box" :class="{selected:personalArr.gender === 1}"></div>
+                <div class="sex">女</div>
+              </div>
+            </div>
+          </div>
+        </transition>
      </div>
  </div>
 </template>
@@ -147,15 +145,18 @@ export default {
         alert('修改成功！')
       })
     },
-    getMaleSex () {
+    getSex (value) {
       // this.sex = true
-      this.personalArr.gender = 0
+      this.personalArr.gender = value
+      console.log(this)
       this.selectSex = false
-    },
-    getFemaleSex () {
-      // this.sex = false
-      this.personalArr.gender = 1
-      this.selectSex = false
+      // 方法定义与调用方法的区别，要用this.getMaleSex调用方法，getMaleSex()有括号是直接立刻调用。
+      // let t = setTimeout(this.getMaleSex, 1000)
+      // window.setTimeout(() => {
+      //   console.log(this)
+      //   this.selectSex = false
+      // }, 1000)
+      // clearTimeout(t)
     },
     changeSex () {
       this.selectSex = true
@@ -211,8 +212,6 @@ export default {
                   background-image: url('../assets/select-sex.png');
                 }
               }
-              .sex{
-              }
             }
           }
         }
@@ -250,9 +249,11 @@ export default {
                   display: flex;
                   align-items: center;
                   z-index:999;
+                  width: 1.5rem;
                   >input{
                     // 透明度为0
                     opacity:0;
+                    width: 1.5rem;
                   }
                 }
                 .bind{
@@ -276,5 +277,16 @@ export default {
             }
         }
     }
+}
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>
