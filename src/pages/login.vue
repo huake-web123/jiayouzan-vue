@@ -45,22 +45,26 @@ export default {
       }
     },
     entry () {
-      this.$ajax({
-        method: 'post',
-        url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/login',
-        data: JSON.stringify({
-          account: this.userName,
-          password: this.passWord
+      if (this.userName === 'admin' && this.passWord === '123456') {
+        this.$ajax({
+          method: 'post',
+          url: 'https://dsn.apizza.net/mock/fb275314bc53ebc54f45a6b698d2433d/login',
+          data: JSON.stringify({
+            account: this.userName,
+            password: this.passWord
+          })
+        }).then((res) => {
+          // console.log(res.data.token)
+          Cookies.set('token', res.data.token, { expires: 7, path: '' })
+          this.success = true
+          setTimeout(() => {
+            this.$router.push({path: '/HomePage'})
+          }, 500)
+          // this.$router.push({path: '/HomePage'})
         })
-      }).then((res) => {
-        // console.log(res.data.token)
-        Cookies.set('token', res.data.token, { expires: 7, path: '' })
-        this.success = true
-        setTimeout(() => {
-          this.$router.push({path: '/HomePage'})
-        }, 500)
-        // this.$router.push({path: '/HomePage'})
-      })
+      } else {
+        alert('账号名或密码错误！')
+      }
     }
   }
 }

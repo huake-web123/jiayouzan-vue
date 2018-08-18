@@ -130,6 +130,7 @@ export default {
         })
     },
     loadMoreStationData () {
+      this.showLoading = true
       this.$ajax.all([this.loadMoreStation()])
         .then((res) => {
           this.loading = true
@@ -138,6 +139,7 @@ export default {
           } else {
             this.loadArr.push(...res[0].data.stationArr)
           }
+          this.showLoading = false
         })
     },
     gasMessage (id, name) {

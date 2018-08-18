@@ -25,6 +25,9 @@
          <div class="left-content">统一社会信用码：</div>
          <div class="right-content">{{orderArr.invoice_no}}</div>
      </div>
+     <div class="verification-code">
+       <div class="right">{{orderArr.code}}</div>
+     </div>
  </div>
 </template>
 
@@ -82,6 +85,18 @@ export default {
             margin-right: 0.3rem;
             color: #8A8A8A;
         }
+    }
+    .verification-code{
+      margin: 1rem 0.5rem 0 0.5rem;
+      height: 1.8rem;
+      background-color:white;
+      color: #EB4553;
+      border-radius: 0.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
     }
 }
 </style>

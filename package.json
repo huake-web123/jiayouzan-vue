@@ -2,7 +2,7 @@
   "name": "jiayouzan-vue",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "蒋建明 <jiangjianming@bmkp.cn>",
+  "author": "韩金秀",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --host 0.0.0.0 --inline --progress --config build/webpack.dev.conf.js",

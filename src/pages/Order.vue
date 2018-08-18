@@ -8,7 +8,7 @@
       </div>
       <div class="discount-box" @click="selectCounpon()">
         <div class="discount">优惠券</div>
-        <div class="discount-txt">&yen;{{discountMoney}}</div>
+        <div class="discount-txt">&yen;{{discountMoney | discountFilters}}</div>
       </div>
       <div class="bill-box" @click="addInvoice()">
         <div class="bill-title">发票抬头</div>
@@ -157,6 +157,7 @@ export default {
   data () {
     return {
       gasModel: '',
+      totalMoney: '',
       money: '',
       invoice: false,
       addInvoiceHead: false,
@@ -195,6 +196,12 @@ export default {
           break
       }
       return str
+    },
+    discountFilters (value) {
+      if (value === 0) {
+        value = '暂无可用红包'
+      }
+      return value
     },
     timeFilters (time) {
       time = time.split(' ')[0]
@@ -305,9 +312,9 @@ export default {
           this.couponIndex = tempIndex
         }
       }
-      if (this.discountMoney === 0) {
-        this.discountMoney = '暂无可用红包'
-      }
+      // if (this.discountMoney === 0) {
+      //   this.discountMoney = '暂无可用红包'
+      // }
     },
     getType1 () {
       this.headType = 1
@@ -369,6 +376,7 @@ export default {
             invoice_no: this.taxNumber,
             is_default: false
           })
+          alert('添加成功！')
         }
       })
     },
@@ -386,6 +394,7 @@ export default {
         })
       }).then((res) => {
         console.log(res.data.data.msg)
+        alert(res.data.data.msg)
         // 后台改数据和前端显示无关，前端必须自己修改数组
         this.invoiceArr[this.currentIndex].type = this.invoiceType
         this.invoiceArr[this.currentIndex].name = this.invoiceHeadEdit
@@ -406,7 +415,7 @@ export default {
           }
         }
       } else {
-        this.discountMoney = '暂无可用红包'
+        this.discountMoney = 0
       }
     },
     isAvaliableFlag (item) {

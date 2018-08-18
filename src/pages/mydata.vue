@@ -101,8 +101,8 @@ export default {
       var that = this
       var file = e.target.files[0]
       var imgSize = file.size / 1024
-      if (imgSize > 200) {
-        alert('请上传大小不要超过200KB的图片')
+      if (imgSize > 1024) {
+        alert('请上传大小不要超过1MB的图片')
       } else {
         var reader = new FileReader()
         reader.readAsDataURL(file)

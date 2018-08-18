@@ -1,6 +1,7 @@
 <!--Created by hjx on 2018/7/24.-->
 <template>
     <div class="wrapper-box">
+      <loading :loadStatus="showLoading"></loading>
       <div class="header">
         <div class="selected">全部</div>
         <div>待付款</div>
@@ -31,12 +32,15 @@
 </template>
 
 <script>
+// @在这里指代src
+import loading from '@/components/loading'
 export default {
   name: '',
   data  () {
     return {
       page: 1,
       orderArr: '',
+      showLoading: true,
       orderId: ''
     }
   },
@@ -44,6 +48,9 @@ export default {
     this.$nextTick(() => {
       this.loadOrderData()
     })
+  },
+  components: {
+    'loading': loading
   },
   methods: {
     loadOrder () {
@@ -54,6 +61,7 @@ export default {
         .then((res) => {
           // console.log(res[0].data.order_list)
           this.orderArr = res[0].data.order_list
+          this.showLoading = false
         })
     },
     getHref (orderId) {

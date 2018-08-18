@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/pages/HomePage'
 import Gas from '@/pages/Gas'
-import CarService from '@/pages/CarService'
 import Personal from '@/pages/Personal'
 import jiaYou from '@/pages/jiayouliang'
 import order from '@/pages/Order'
@@ -50,11 +49,6 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
-    },
-    {
-      path: '/CarService',
-      name: 'CarService',
-      component: CarService
     },
     {
       path: '/Personal',
