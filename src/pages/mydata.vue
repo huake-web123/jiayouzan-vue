@@ -209,7 +209,7 @@ export default {
                 background-size: 0.5rem;
                 margin-right: 0.2rem;
                 &.selected{
-                  background-image: url('../assets/select-sex.png');
+                  background-image: url('http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-select-sex.png');
                 }
               }
             }

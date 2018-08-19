@@ -18,7 +18,7 @@
             <div class="state">已完成</div>
           </div>
           <div class="oil-box">
-            <div class="oil-gun"><img src="../assets/oil_gun.png"></div>
+            <div class="oil-gun"><img src="http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-oil_gun.png"></div>
             <div>{{item.gun_id}}号油枪 - {{item.gas_no}}#</div>
           </div>
           <div class="pay-box">

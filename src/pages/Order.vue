@@ -36,7 +36,8 @@
             <div class="txt">请选择优惠券</div>
             <div class="img-box" @click="closeCoupon()"><img src="../assets/ios-close-outline.png"></div>
           </div>
-          <div class="coupon" v-for="(item,index) in couponsArr"
+          <div class="coupon-scroll">
+            <div class="coupon" v-for="(item,index) in couponsArr"
                :key="item.id"
                v-if="isAvaliableFlag(item)"
                @click="getCouponIndex(item,index)">
@@ -57,6 +58,28 @@
               </div>
             <div class="content-right">{{item.type | typeFilters}}</div>
           </div>
+          </div>
+          <!-- <div class="coupon" v-for="(item,index) in couponsArr"
+               :key="item.id"
+               v-if="isAvaliableFlag(item)"
+               @click="getCouponIndex(item,index)">
+            <div class="content-left">
+              <div class="img-box" :class='{selected:couponIndex == index}'></div>
+              <div class="main-content">
+                <div class="discount">
+                  <span class="num">{{item | itemFilters}}</span>
+                  <span class="txt">{{item.type | itemUnitFilters}}</span>
+                  <span class="area">(武汉市)</span>
+                </div>
+                <div class="time-box">
+                  <div class="valid">有效时间：</div>
+                  <div class="time">{{item.start_time | timeFilters}}&nbsp;—&nbsp;{{item.end_time | timeFilters}}</div>
+                </div>
+                <div class="min-amount">满{{item.threshold}}元可用</div>
+              </div>
+              </div>
+            <div class="content-right">{{item.type | typeFilters}}</div>
+          </div> -->
         </div>
       </div>
       <div class="modal-box" v-if="invoice">
@@ -700,7 +723,7 @@ export default {
           }
         }
         .scroll{
-          height:10.1rem;
+          height:9rem;
           overflow: auto;
           .invoiceInfo{
             height:1.4rem;
@@ -831,14 +854,21 @@ export default {
         background-color:#e6e6e6;
         height:100%;
         border-radius: 0.1rem;
+        position: relative;
+       
         .head-title{
           display:flex;
           justify-content:space-between;
           align-items:center;
           height:0.8rem;
+          width: 100%;
+          box-sizing: border-box;
           padding-left:0.3rem;
           background-color:#F5F5F5;
           border-radius: 0.1rem;
+          position: absolute;
+          top:0;
+          z-index: 10;
           .img-box{
             margin-right:0.25rem;
             float:right;
@@ -848,69 +878,74 @@ export default {
             }
           }
         }
-        .coupon{
-          height:2rem;
-          background: url("../assets/coupon.png") no-repeat;
-          margin-top:0.2rem;
-          margin-left:0.2rem;
-          margin-right: 0.2rem;
-          background-size:cover;
-          /*让背景图自适应*/
-          display:flex;
-          justify-content: space-between;
-          /*用insert键可以改变鼠标光标状态*/
-          .content-left{
-            display: flex;
-            .img-box{
-              width: 0.4rem;
-              height:0.4rem;
-              margin-left:0.2rem;
-              margin-top:0.2rem;
-              background-image: url("../assets/check_normal.png");
-              background-size: 0.4rem;
-              &.selected{
-                background-image: url("../assets/select_coupon.png");
+        .coupon-scroll{
+          padding:.8rem 0 0.5rem 0; 
+          box-sizing: border-box;
+          overflow-y:auto;
+          height: 100%;
+          .coupon{
+            height:2rem;
+            background-image: url("http://7xqnxu.com1.z0.glb.clouddn.com/jiayouzan-vue-coupon.png");
+            margin-top:0.2rem;
+            margin-left:0.2rem;
+            margin-right: 0.2rem;
+            background-size:cover;
+            /*让背景图自适应*/
+            display:flex;
+            justify-content: space-between;
+            /*用insert键可以改变鼠标光标状态*/
+            .content-left{
+              display: flex;
+              .img-box{
+                width: 0.4rem;
+                height:0.4rem;
+                margin-left:0.2rem;
+                margin-top:0.2rem;
+                background-image: url("../assets/check_normal.png");
                 background-size: 0.4rem;
-              }
-            }
-            .main-content{
-              margin-left: 0.2rem;
-              .discount{
-                /*display: flex;*/
-                .num{
-                  color:#F99E47;
-                  font-size:0.5rem;
-                }
-                .area{
-                  margin-left: 0.2rem;
-                  color:#F99E47;
+                &.selected{
+                  background-image: url("../assets/select_coupon.png");
+                  background-size: 0.4rem;
                 }
               }
-              .time-box{
-                font-size:0.16rem;
-                .valid{
+              .main-content{
+                margin-left: 0.2rem;
+                .discount{
+                  /*display: flex;*/
+                  .num{
+                    color:#F99E47;
+                    font-size:0.5rem;
+                  }
+                  .area{
+                    margin-left: 0.2rem;
+                    color:#F99E47;
+                  }
+                }
+                .time-box{
+                  font-size:0.16rem;
+                  .valid{
+                    color: #B1B1B1;
+                  }
+                  .time{
+                    color:#F99E47;
+                  }
+                }
+                .min-amount{
+                  font-size:0.16rem;
+                  margin-top:0.1rem;
                   color: #B1B1B1;
                 }
-                .time{
-                  color:#F99E47;
-                }
-              }
-              .min-amount{
-                font-size:0.16rem;
-                margin-top:0.1rem;
-                color: #B1B1B1;
               }
             }
-          }
-
-          .content-right{
-            width: 1.4rem;
-            height:0.6rem;
-            line-height: 0.6rem;
-            color:white;
-            text-align: center;
-            background-color: #F99E47;
-            margin-top:0.2rem;
+            .content-right{
+              width: 1.4rem;
+              height:0.6rem;
+              line-height: 0.6rem;
+              color:white;
+              text-align: center;
+              background-color: #F99E47;
+              margin-top:0.2rem;
+            }
           }
         }
       }
