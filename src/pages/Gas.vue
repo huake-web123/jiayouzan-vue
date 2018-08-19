@@ -346,7 +346,9 @@ export default {
         }
         .disclaimer{
           margin-top:0.16rem;
-          color: #eb4652;
+          color:black;
+          font-size: 0.3rem;
+          padding-bottom: 0.1rem;
         }
       }
     }
