@@ -149,6 +149,11 @@ export default {
           }
           a{
             float: right;
+            text-decoration: none;
+            color: #000;
+            &:active{
+              color: #eb4653;
+            }
           }
         }
       }
