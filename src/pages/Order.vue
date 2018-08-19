@@ -855,7 +855,6 @@ export default {
         height:100%;
         border-radius: 0.1rem;
         position: relative;
-       
         .head-title{
           display:flex;
           justify-content:space-between;
@@ -879,7 +878,7 @@ export default {
           }
         }
         .coupon-scroll{
-          padding:.8rem 0 0.5rem 0; 
+          padding:0.8rem 0 0.5rem 0;
           box-sizing: border-box;
           overflow-y:auto;
           height: 100%;
